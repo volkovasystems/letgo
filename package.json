@@ -1,0 +1,31 @@
+{
+  "name": "letgo",
+  "version": "0.0.0",
+  "description": "Construct a catcher flow procedure.",
+  "main": "letgo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volkovasystems/letgo.git"
+  },
+  "keywords": [
+    "catcher",
+    "cache",
+    "asynchronous",
+    "callback",
+    "letgo"
+  ],
+  "author": "Richeve S. Bebedor <richeve.bebedor@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/volkovasystems/letgo/issues"
+  },
+  "homepage": "https://github.com/volkovasystems/letgo#readme",
+  "dependencies": {
+    "asea": "0.0.3",
+    "called": "0.0.5",
+    "harden": "^0.3.2"
+  }
+}
