@@ -1,5 +1,6 @@
 {
   "name": "letgo",
+  "version": "0.0.1",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.js",
   "authors": [
@@ -24,6 +25,7 @@
   "dependencies": {
     "asea": "^0.0.3",
     "harden": "^0.3.2",
-    "called": "^0.0.5"
+    "called": "^0.0.5",
+    "zelf": "^0.0.0"
   }
 }

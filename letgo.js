@@ -54,7 +54,8 @@
 		{
 			"asea": "asea",
 			"called": "called",
-			"harden": "harden"
+			"harden": "harden",
+			"zelf": "zelf"
 		}
 	@end-include
 */
@@ -63,6 +64,7 @@ if( typeof window == "undefined" ){
 	var asea = require( "asea" );
 	var called = require( "called" );
 	var harden = require( "harden" );
+	var zelf = require( "zelf" );
 }
 
 if( typeof window != "undefined" &&
@@ -83,22 +85,14 @@ if( asea.client &&
 	throw new Error( "harden is not defined" );
 }
 
-var letgo = function letgo( ){
-	var self = this;
-	if( asea.server ){
-		if( !this ||
-			this === global )
-		{
-			self = global;
-		}
+if( asea.client &&
+	!( "zelf" in window ) )
+{
+	throw new Error( "zelf is not defined" );
+}
 
-	}else if( asea.client ){
-		if( !this ||
-			this === window )
-		{
-			self = window;
-		}
-	}
+var letgo = function letgo( ){
+	var self = zelf( this );
 
 	var cache = { "callback": called( ) };
 	var catcher = function catcher( callback ){
