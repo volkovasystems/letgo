@@ -94,7 +94,7 @@ if( asea.client &&
 var letgo = function letgo( ){
 	var self = zelf( this );
 
-	var cache = { "callback": called( ) };
+	var cache = { "callback": called.bind( self )( ) };
 	var catcher = function catcher( callback ){
 		cache.callback = called.bind( self )( callback );
 
