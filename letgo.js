@@ -50,7 +50,6 @@
 
 	@include:
 		{
-			"asea": "asea",
 			"called": "called",
 			"harden": "harden",
 			"zelf": "zelf"
@@ -58,42 +57,30 @@
 	@end-include
 */
 
-if( typeof window == "undefined" ){
-	var asea = require( "asea" );
+if( typeof require == "function" ){
 	var called = require( "called" );
 	var harden = require( "harden" );
 	var zelf = require( "zelf" );
 }
 
-if( typeof window != "undefined" &&
-	!( "asea" in window ) )
-{
-	throw new Error( "asea is not defined" );
-}
-
-if( asea.client &&
-	!( "called" in window ) )
-{
+if( typeof window != "undefined" && !( "called" in window ) ){
 	throw new Error( "called is not defined" );
 }
 
-if( asea.client &&
-	!( "harden" in window ) )
-{
+if( typeof window != "undefined" && !( "harden" in window ) ){
 	throw new Error( "harden is not defined" );
 }
 
-if( asea.client &&
-	!( "zelf" in window ) )
-{
+if( typeof window != "undefined" && !( "zelf" in window ) ){
 	throw new Error( "zelf is not defined" );
 }
 
 var letgo = function letgo( ){
-	var self = zelf( this );
+	let self = zelf( this );
 
-	var cache = { "callback": called.bind( self )( ) };
-	var catcher = function catcher( callback ){
+	let cache = { "callback": called.bind( self )( ) };
+
+	let catcher = function catcher( callback ){
 		cache.callback = called.bind( self )( callback );
 
 		return cache;
@@ -104,6 +91,6 @@ var letgo = function letgo( ){
 	return catcher;
 };
 
-if( asea.server ){
+if( typeof module != "undefined" && typeof module.exports != "undefined" ){
 	module.exports = letgo;
 }
