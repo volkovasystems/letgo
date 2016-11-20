@@ -72,7 +72,7 @@ const letgo = function letgo( method ){
 
 	let cache = { "callback": called.bind( self )( ) };
 
-	let catcher = function catcher( callback ){
+	let catcher = called.bind( self )( function catcher( callback ){
 
 		cache.callback = called.bind( self )( callback );
 
@@ -87,11 +87,11 @@ const letgo = function letgo( method ){
 		}
 
 		return cache;
-	};
+	} );
 
 	harden( "cache", cache, catcher );
 
-	return called.bind( self )( catcher );
+	return catcher;
 };
 
 module.exports = letgo;
