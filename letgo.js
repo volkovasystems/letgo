@@ -46,51 +46,52 @@
 		The catcher contains a cache with the callback.
 
 		The catcher returns the cache.
+
+		The cache contains the result and callback.
 	@end-module-documentation
 
 	@include:
 		{
 			"called": "called",
 			"harden": "harden",
-			"zelf": "zelf"
+			"protype": "protype",
+			"truly": "truly",
+			"zelf": "zelf",
 		}
 	@end-include
 */
 
-if( typeof require == "function" ){
-	var called = require( "called" );
-	var harden = require( "harden" );
-	var zelf = require( "zelf" );
-}
+const called = require( "called" );
+const harden = require( "harden" );
+const protype = require( "protype" );
+const truly = require( "truly" );
+const zelf = require( "zelf" );
 
-if( typeof window != "undefined" && !( "called" in window ) ){
-	throw new Error( "called is not defined" );
-}
-
-if( typeof window != "undefined" && !( "harden" in window ) ){
-	throw new Error( "harden is not defined" );
-}
-
-if( typeof window != "undefined" && !( "zelf" in window ) ){
-	throw new Error( "zelf is not defined" );
-}
-
-var letgo = function letgo( ){
+const letgo = function letgo( method ){
 	let self = zelf( this );
 
 	let cache = { "callback": called.bind( self )( ) };
 
 	let catcher = function catcher( callback ){
+
 		cache.callback = called.bind( self )( callback );
+
+		/*;
+			@note:
+				If the method is given, it will execute the method
+					after the catcher function is called.
+			@end-note
+		*/
+		if( truly( method ) && protype( method, FUNCTION ) ){
+			method.bind( self )( cache );
+		}
 
 		return cache;
 	};
 
 	harden( "cache", cache, catcher );
 
-	return catcher;
+	return called.bind( self )( catcher );
 };
 
-if( typeof module != "undefined" && typeof module.exports != "undefined" ){
-	module.exports = letgo;
-}
+module.exports = letgo;
