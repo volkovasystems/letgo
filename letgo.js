@@ -40,6 +40,8 @@
 	@end-module-configuration
 
 	@module-documentation:
+		Construct a catcher flow procedure.
+
 		This will return a catcher function which should
 			be returned to catch a callback.
 
@@ -48,6 +50,10 @@
 		The catcher returns the cache.
 
 		The cache contains the result and callback.
+
+		Passing a custom method to letgo executes the method after consuming the callback
+			and after executing the catcher function. This will provide for a more
+			specific flow of procedures.
 	@end-module-documentation
 
 	@include:
@@ -56,6 +62,7 @@
 			"harden": "harden",
 			"protype": "protype",
 			"truly": "truly",
+			"vound": "vound",
 			"zelf": "zelf",
 		}
 	@end-include
@@ -65,6 +72,7 @@ const called = require( "called" );
 const harden = require( "harden" );
 const protype = require( "protype" );
 const truly = require( "truly" );
+const vound = require( "vound" );
 const zelf = require( "zelf" );
 
 const letgo = function letgo( method ){
@@ -83,7 +91,12 @@ const letgo = function letgo( method ){
 			@end-note
 		*/
 		if( truly( method ) && protype( method, FUNCTION ) ){
-			method.bind( self )( cache );
+			try{
+				vound( method, self )( cache );
+
+			}catch( error ){
+				cache.callback( new Error( `error executing catcher custom method, ${ error }` ) );
+			}
 		}
 
 		return cache;

@@ -1,6 +1,6 @@
 {
   "name": "letgo",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.js",
   "scripts": {
@@ -24,10 +24,11 @@
   },
   "homepage": "https://github.com/volkovasystems/letgo#readme",
   "dependencies": {
-    "called": "^0.3.0",
-    "harden": "^0.6.0",
-    "protype": "^0.2.0",
-    "truly": "^0.2.0",
-    "zelf": "^0.2.0"
+    "called": "^0.4.0",
+    "harden": "^0.10.0",
+    "protype": "^0.4.0",
+    "truly": "^0.3.0",
+    "vound": "^0.2.0",
+    "zelf": "^0.3.0"
   }
 }
