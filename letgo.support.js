@@ -1,0 +1,112 @@
+"use strict";
+
+/*;
+	@module-license:
+		The MIT License (MIT)
+		@mit-license
+
+		Copyright (@c) 2016 Richeve Siodina Bebedor
+		@email: richeve.bebedor@gmail.com
+
+		Permission is hereby granted, free of charge, to any person obtaining a copy
+		of this software and associated documentation files (the "Software"), to deal
+		in the Software without restriction, including without limitation the rights
+		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the Software is
+		furnished to do so, subject to the following conditions:
+
+		The above copyright notice and this permission notice shall be included in all
+		copies or substantial portions of the Software.
+
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		SOFTWARE.
+	@end-module-license
+
+	@module-configuration:
+		{
+			"package": "letgo",
+			"path": "letgo/letgo.js",
+			"file": "letgo.js",
+			"module": "letgo",
+			"author": "Richeve S. Bebedor",
+			"eMail": "richeve.bebedor@gmail.com",
+			"repository": "https://github.com/volkovasystems/letgo.git",
+			"test": "letgo-test.js",
+			"global": true
+		}
+	@end-module-configuration
+
+	@module-documentation:
+		Construct a catcher flow procedure.
+
+		This will return a catcher function which should
+			be returned to catch a callback.
+
+		The catcher contains a cache with the callback.
+
+		The catcher returns the cache.
+
+		The cache contains the result and callback.
+
+		Passing a custom method to letgo executes the method after consuming the callback
+			and after executing the catcher function. This will provide for a more
+			specific flow of procedures.
+	@end-module-documentation
+
+	@include:
+		{
+			"called": "called",
+			"harden": "harden",
+			"protype": "protype",
+			"truly": "truly",
+			"vound": "vound",
+			"zelf": "zelf",
+		}
+	@end-include
+*/
+
+var called = require("called");
+var harden = require("harden");
+var protype = require("protype");
+var truly = require("truly");
+var vound = require("vound");
+var zelf = require("zelf");
+
+var letgo = function letgo(method) {
+	var self = zelf(this);
+
+	var cache = { "callback": called.bind(self)() };
+
+	var catcher = called.bind(self)(function catcher(callback) {
+
+		cache.callback = called.bind(self)(callback);
+
+		/*;
+  	@note:
+  		If the method is given, it will execute the method
+  			after the catcher function is called.
+  	@end-note
+  */
+		if (truly(method) && protype(method, FUNCTION)) {
+			try {
+				vound(method, self)(cache);
+			} catch (error) {
+				cache.callback(new Error("error executing catcher custom method, " + error));
+			}
+		}
+
+		return cache;
+	});
+
+	harden("cache", cache, catcher);
+
+	return catcher;
+};
+
+module.exports = letgo;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImxldGdvLmpzIl0sIm5hbWVzIjpbImNhbGxlZCIsInJlcXVpcmUiLCJoYXJkZW4iLCJwcm90eXBlIiwidHJ1bHkiLCJ2b3VuZCIsInplbGYiLCJsZXRnbyIsIm1ldGhvZCIsInNlbGYiLCJjYWNoZSIsImJpbmQiLCJjYXRjaGVyIiwiY2FsbGJhY2siLCJGVU5DVElPTiIsImVycm9yIiwiRXJyb3IiLCJtb2R1bGUiLCJleHBvcnRzIl0sIm1hcHBpbmdzIjoiOztBQUFBOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBc0VBLElBQU1BLFNBQVNDLFFBQVMsUUFBVCxDQUFmO0FBQ0EsSUFBTUMsU0FBU0QsUUFBUyxRQUFULENBQWY7QUFDQSxJQUFNRSxVQUFVRixRQUFTLFNBQVQsQ0FBaEI7QUFDQSxJQUFNRyxRQUFRSCxRQUFTLE9BQVQsQ0FBZDtBQUNBLElBQU1JLFFBQVFKLFFBQVMsT0FBVCxDQUFkO0FBQ0EsSUFBTUssT0FBT0wsUUFBUyxNQUFULENBQWI7O0FBRUEsSUFBTU0sUUFBUSxTQUFTQSxLQUFULENBQWdCQyxNQUFoQixFQUF3QjtBQUNyQyxLQUFJQyxPQUFPSCxLQUFNLElBQU4sQ0FBWDs7QUFFQSxLQUFJSSxRQUFRLEVBQUUsWUFBWVYsT0FBT1csSUFBUCxDQUFhRixJQUFiLEdBQWQsRUFBWjs7QUFFQSxLQUFJRyxVQUFVWixPQUFPVyxJQUFQLENBQWFGLElBQWIsRUFBcUIsU0FBU0csT0FBVCxDQUFrQkMsUUFBbEIsRUFBNEI7O0FBRTlESCxRQUFNRyxRQUFOLEdBQWlCYixPQUFPVyxJQUFQLENBQWFGLElBQWIsRUFBcUJJLFFBQXJCLENBQWpCOztBQUVBOzs7Ozs7QUFNQSxNQUFJVCxNQUFPSSxNQUFQLEtBQW1CTCxRQUFTSyxNQUFULEVBQWlCTSxRQUFqQixDQUF2QixFQUFvRDtBQUNuRCxPQUFHO0FBQ0ZULFVBQU9HLE1BQVAsRUFBZUMsSUFBZixFQUF1QkMsS0FBdkI7QUFFQSxJQUhELENBR0MsT0FBT0ssS0FBUCxFQUFjO0FBQ2RMLFVBQU1HLFFBQU4sQ0FBZ0IsSUFBSUcsS0FBSiw2Q0FBc0RELEtBQXRELENBQWhCO0FBQ0E7QUFDRDs7QUFFRCxTQUFPTCxLQUFQO0FBQ0EsRUFwQmEsQ0FBZDs7QUFzQkFSLFFBQVEsT0FBUixFQUFpQlEsS0FBakIsRUFBd0JFLE9BQXhCOztBQUVBLFFBQU9BLE9BQVA7QUFDQSxDQTlCRDs7QUFnQ0FLLE9BQU9DLE9BQVAsR0FBaUJYLEtBQWpCIiwiZmlsZSI6ImxldGdvLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyo7XG5cdEBtb2R1bGUtbGljZW5zZTpcblx0XHRUaGUgTUlUIExpY2Vuc2UgKE1JVClcblx0XHRAbWl0LWxpY2Vuc2VcblxuXHRcdENvcHlyaWdodCAoQGMpIDIwMTYgUmljaGV2ZSBTaW9kaW5hIEJlYmVkb3Jcblx0XHRAZW1haWw6IHJpY2hldmUuYmViZWRvckBnbWFpbC5jb21cblxuXHRcdFBlcm1pc3Npb24gaXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkgcGVyc29uIG9idGFpbmluZyBhIGNvcHlcblx0XHRvZiB0aGlzIHNvZnR3YXJlIGFuZCBhc3NvY2lhdGVkIGRvY3VtZW50YXRpb24gZmlsZXMgKHRoZSBcIlNvZnR3YXJlXCIpLCB0byBkZWFsXG5cdFx0aW4gdGhlIFNvZnR3YXJlIHdpdGhvdXQgcmVzdHJpY3Rpb24sIGluY2x1ZGluZyB3aXRob3V0IGxpbWl0YXRpb24gdGhlIHJpZ2h0c1xuXHRcdHRvIHVzZSwgY29weSwgbW9kaWZ5LCBtZXJnZSwgcHVibGlzaCwgZGlzdHJpYnV0ZSwgc3VibGljZW5zZSwgYW5kL29yIHNlbGxcblx0XHRjb3BpZXMgb2YgdGhlIFNvZnR3YXJlLCBhbmQgdG8gcGVybWl0IHBlcnNvbnMgdG8gd2hvbSB0aGUgU29mdHdhcmUgaXNcblx0XHRmdXJuaXNoZWQgdG8gZG8gc28sIHN1YmplY3QgdG8gdGhlIGZvbGxvd2luZyBjb25kaXRpb25zOlxuXG5cdFx0VGhlIGFib3ZlIGNvcHlyaWdodCBub3RpY2UgYW5kIHRoaXMgcGVybWlzc2lvbiBub3RpY2Ugc2hhbGwgYmUgaW5jbHVkZWQgaW4gYWxsXG5cdFx0Y29waWVzIG9yIHN1YnN0YW50aWFsIHBvcnRpb25zIG9mIHRoZSBTb2Z0d2FyZS5cblxuXHRcdFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCBcIkFTIElTXCIsIFdJVEhPVVQgV0FSUkFOVFkgT0YgQU5ZIEtJTkQsIEVYUFJFU1MgT1Jcblx0XHRJTVBMSUVELCBJTkNMVURJTkcgQlVUIE5PVCBMSU1JVEVEIFRPIFRIRSBXQVJSQU5USUVTIE9GIE1FUkNIQU5UQUJJTElUWSxcblx0XHRGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRSBBTkQgTk9OSU5GUklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEVcblx0XHRBVVRIT1JTIE9SIENPUFlSSUdIVCBIT0xERVJTIEJFIExJQUJMRSBGT1IgQU5ZIENMQUlNLCBEQU1BR0VTIE9SIE9USEVSXG5cdFx0TElBQklMSVRZLCBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgVE9SVCBPUiBPVEhFUldJU0UsIEFSSVNJTkcgRlJPTSxcblx0XHRPVVQgT0YgT1IgSU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SIE9USEVSIERFQUxJTkdTIElOIFRIRVxuXHRcdFNPRlRXQVJFLlxuXHRAZW5kLW1vZHVsZS1saWNlbnNlXG5cblx0QG1vZHVsZS1jb25maWd1cmF0aW9uOlxuXHRcdHtcblx0XHRcdFwicGFja2FnZVwiOiBcImxldGdvXCIsXG5cdFx0XHRcInBhdGhcIjogXCJsZXRnby9sZXRnby5qc1wiLFxuXHRcdFx0XCJmaWxlXCI6IFwibGV0Z28uanNcIixcblx0XHRcdFwibW9kdWxlXCI6IFwibGV0Z29cIixcblx0XHRcdFwiYXV0aG9yXCI6IFwiUmljaGV2ZSBTLiBCZWJlZG9yXCIsXG5cdFx0XHRcImVNYWlsXCI6IFwicmljaGV2ZS5iZWJlZG9yQGdtYWlsLmNvbVwiLFxuXHRcdFx0XCJyZXBvc2l0b3J5XCI6IFwiaHR0cHM6Ly9naXRodWIuY29tL3ZvbGtvdmFzeXN0ZW1zL2xldGdvLmdpdFwiLFxuXHRcdFx0XCJ0ZXN0XCI6IFwibGV0Z28tdGVzdC5qc1wiLFxuXHRcdFx0XCJnbG9iYWxcIjogdHJ1ZVxuXHRcdH1cblx0QGVuZC1tb2R1bGUtY29uZmlndXJhdGlvblxuXG5cdEBtb2R1bGUtZG9jdW1lbnRhdGlvbjpcblx0XHRDb25zdHJ1Y3QgYSBjYXRjaGVyIGZsb3cgcHJvY2VkdXJlLlxuXG5cdFx0VGhpcyB3aWxsIHJldHVybiBhIGNhdGNoZXIgZnVuY3Rpb24gd2hpY2ggc2hvdWxkXG5cdFx0XHRiZSByZXR1cm5lZCB0byBjYXRjaCBhIGNhbGxiYWNrLlxuXG5cdFx0VGhlIGNhdGNoZXIgY29udGFpbnMgYSBjYWNoZSB3aXRoIHRoZSBjYWxsYmFjay5cblxuXHRcdFRoZSBjYXRjaGVyIHJldHVybnMgdGhlIGNhY2hlLlxuXG5cdFx0VGhlIGNhY2hlIGNvbnRhaW5zIHRoZSByZXN1bHQgYW5kIGNhbGxiYWNrLlxuXG5cdFx0UGFzc2luZyBhIGN1c3RvbSBtZXRob2QgdG8gbGV0Z28gZXhlY3V0ZXMgdGhlIG1ldGhvZCBhZnRlciBjb25zdW1pbmcgdGhlIGNhbGxiYWNrXG5cdFx0XHRhbmQgYWZ0ZXIgZXhlY3V0aW5nIHRoZSBjYXRjaGVyIGZ1bmN0aW9uLiBUaGlzIHdpbGwgcHJvdmlkZSBmb3IgYSBtb3JlXG5cdFx0XHRzcGVjaWZpYyBmbG93IG9mIHByb2NlZHVyZXMuXG5cdEBlbmQtbW9kdWxlLWRvY3VtZW50YXRpb25cblxuXHRAaW5jbHVkZTpcblx0XHR7XG5cdFx0XHRcImNhbGxlZFwiOiBcImNhbGxlZFwiLFxuXHRcdFx0XCJoYXJkZW5cIjogXCJoYXJkZW5cIixcblx0XHRcdFwicHJvdHlwZVwiOiBcInByb3R5cGVcIixcblx0XHRcdFwidHJ1bHlcIjogXCJ0cnVseVwiLFxuXHRcdFx0XCJ2b3VuZFwiOiBcInZvdW5kXCIsXG5cdFx0XHRcInplbGZcIjogXCJ6ZWxmXCIsXG5cdFx0fVxuXHRAZW5kLWluY2x1ZGVcbiovXG5cbmNvbnN0IGNhbGxlZCA9IHJlcXVpcmUoIFwiY2FsbGVkXCIgKTtcbmNvbnN0IGhhcmRlbiA9IHJlcXVpcmUoIFwiaGFyZGVuXCIgKTtcbmNvbnN0IHByb3R5cGUgPSByZXF1aXJlKCBcInByb3R5cGVcIiApO1xuY29uc3QgdHJ1bHkgPSByZXF1aXJlKCBcInRydWx5XCIgKTtcbmNvbnN0IHZvdW5kID0gcmVxdWlyZSggXCJ2b3VuZFwiICk7XG5jb25zdCB6ZWxmID0gcmVxdWlyZSggXCJ6ZWxmXCIgKTtcblxuY29uc3QgbGV0Z28gPSBmdW5jdGlvbiBsZXRnbyggbWV0aG9kICl7XG5cdGxldCBzZWxmID0gemVsZiggdGhpcyApO1xuXG5cdGxldCBjYWNoZSA9IHsgXCJjYWxsYmFja1wiOiBjYWxsZWQuYmluZCggc2VsZiApKCApIH07XG5cblx0bGV0IGNhdGNoZXIgPSBjYWxsZWQuYmluZCggc2VsZiApKCBmdW5jdGlvbiBjYXRjaGVyKCBjYWxsYmFjayApe1xuXG5cdFx0Y2FjaGUuY2FsbGJhY2sgPSBjYWxsZWQuYmluZCggc2VsZiApKCBjYWxsYmFjayApO1xuXG5cdFx0Lyo7XG5cdFx0XHRAbm90ZTpcblx0XHRcdFx0SWYgdGhlIG1ldGhvZCBpcyBnaXZlbiwgaXQgd2lsbCBleGVjdXRlIHRoZSBtZXRob2Rcblx0XHRcdFx0XHRhZnRlciB0aGUgY2F0Y2hlciBmdW5jdGlvbiBpcyBjYWxsZWQuXG5cdFx0XHRAZW5kLW5vdGVcblx0XHQqL1xuXHRcdGlmKCB0cnVseSggbWV0aG9kICkgJiYgcHJvdHlwZSggbWV0aG9kLCBGVU5DVElPTiApICl7XG5cdFx0XHR0cnl7XG5cdFx0XHRcdHZvdW5kKCBtZXRob2QsIHNlbGYgKSggY2FjaGUgKTtcblxuXHRcdFx0fWNhdGNoKCBlcnJvciApe1xuXHRcdFx0XHRjYWNoZS5jYWxsYmFjayggbmV3IEVycm9yKCBgZXJyb3IgZXhlY3V0aW5nIGNhdGNoZXIgY3VzdG9tIG1ldGhvZCwgJHsgZXJyb3IgfWAgKSApO1xuXHRcdFx0fVxuXHRcdH1cblxuXHRcdHJldHVybiBjYWNoZTtcblx0fSApO1xuXG5cdGhhcmRlbiggXCJjYWNoZVwiLCBjYWNoZSwgY2F0Y2hlciApO1xuXG5cdHJldHVybiBjYXRjaGVyO1xufTtcblxubW9kdWxlLmV4cG9ydHMgPSBsZXRnbztcbiJdfQ==
