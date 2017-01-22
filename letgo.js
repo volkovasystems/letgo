@@ -82,7 +82,17 @@ const truly = require( "truly" );
 const vound = require( "vound" );
 const zelf = require( "zelf" );
 
+//: @support-module:
+	//: @reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
+	Array.prototype.every||(Array.prototype.every=function(r,t){"use strict";
+	var e,n;if(null==this)throw new TypeError("this is null or not defined");
+	var o=Object(this),i=o.length>>>0;if("function"!=typeof r)throw new TypeError;
+	for(arguments.length>1&&(e=t),n=0;i>n;){var f;if(n in o){f=o[n];var y=r.call(e,f,n,o);
+	if(!y)return!1}n++}return!0});
+//: @end-support-module
+
 const CLEANER = Symbol( "cleaner" );
+const CHECKER = Symbol( "checker" );
 
 const letgo = function letgo( method ){
 	/*;
@@ -99,7 +109,11 @@ const letgo = function letgo( method ){
 
 	let self = zelf( this );
 
-	let cache = { [ CLEANER ]: [ ], "callback": called.bind( self )( ) };
+	let cache = {
+		[ CHECKER ]: [ ],
+		[ CLEANER ]: [ ],
+		"callback": called.bind( self )( )
+	};
 
 	/*;
 		@note:
@@ -110,6 +124,16 @@ const letgo = function letgo( method ){
 		Object.getOwnPropertyNames( cache ).forEach( ( name ) => {
 			try{ cache[ name ] = undefined; }catch( error ){ }
 		} );
+	} );
+
+	/*;
+		@note:
+			This is the default checker if execution has finished.
+		@end-note
+	*/
+	cache[ CHECKER ].push( function check( ){
+		return ( truly( cache.callback ) && cache.callback.called( ) ) ||
+			cache[ CLEANER ].length === 0;
 	} );
 
 	let catcher = called.bind( self )( function catcher( callback ){
@@ -164,6 +188,21 @@ const letgo = function letgo( method ){
 
 		return catcher;
 	}, catcher );
+
+	/*;
+		@note:
+			This method is used to register checker and check if the catcher is already done.
+		@end-note
+	*/
+	harden( "done", function done( checker ){
+		if( protype( checker, FUNCTION ) ){
+			cache[ CHECKER ].push( checker );
+
+			return catcher;
+		}
+
+		return cache[ CHECKER ].every( ( checker ) => { return checker( ); } );
+	} );
 
 	return catcher;
 };

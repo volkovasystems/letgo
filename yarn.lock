@@ -120,6 +120,15 @@ ate@^0.4.0:
     protype "^0.7.0"
     zelf "^0.4.0"
 
+ate@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/ate/-/ate-0.5.0.tgz#95cfade6cde86dbf279f78e335e326c7ac70762a"
+  dependencies:
+    babel-runtime "^6.20.0"
+    falzy "^0.7.0"
+    protype "^0.8.0"
+    zelf "^0.4.0"
+
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -712,13 +721,13 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-called@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/called/-/called-0.6.0.tgz#7e5c17c1294dd8f163570d8d9be1a9b53ca6179b"
+called@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/called/-/called-0.7.0.tgz#8dc098b59b05d6744fe781cdd4e29259abc82d3b"
   dependencies:
-    babel-runtime "^6.20.0"
-    harden "^0.12.0"
-    kloak "0.0.0"
+    babel-runtime "^6.22.0"
+    harden "^0.13.0"
+    kloak "^0.1.0"
     protype "^0.8.0"
     raze "^0.6.0"
     zelf "^0.4.0"
@@ -1390,6 +1399,20 @@ kloak@0.0.0:
     transpher "0.0.0"
     truly "^0.5.0"
 
+kloak@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/kloak/-/kloak-0.1.0.tgz#14250397b223245970b0c007e6156c5715d7bf89"
+  dependencies:
+    ate "^0.5.0"
+    babel-runtime "^6.20.0"
+    cobralize "^0.3.0"
+    falzy "^0.7.0"
+    harden "^0.13.0"
+    kein "^0.2.0"
+    protype "^0.8.0"
+    transpher "^0.1.0"
+    truly "^0.5.0"
+
 lazy-cache@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/lazy-cache/-/lazy-cache-1.0.4.tgz#a1d78fc3a50474cb80845d3b3b6e1da49a446e8e"
@@ -2041,6 +2064,14 @@ transpher@0.0.0:
   resolved "https://registry.yarnpkg.com/transpher/-/transpher-0.0.0.tgz#ce2b13e91357734df860f0c2ea175d8c5ddef8fa"
   dependencies:
     ate "^0.4.0"
+    babel-runtime "^6.20.0"
+    falzy "^0.7.0"
+
+transpher@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/transpher/-/transpher-0.1.0.tgz#72ef1df0d85f15face9f0b79c7aa8bba14d95cdc"
+  dependencies:
+    ate "^0.5.0"
     babel-runtime "^6.20.0"
     falzy "^0.7.0"
 
