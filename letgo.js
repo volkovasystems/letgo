@@ -122,7 +122,9 @@ const letgo = function letgo( method ){
 	*/
 	cache[ CLEANER ].push( function clean( ){
 		Object.getOwnPropertyNames( cache ).forEach( ( name ) => {
-			try{ cache[ name ] = undefined; }catch( error ){ }
+			if( name != "callback" ){
+				try{ cache[ name ] = undefined; }catch( error ){ }
+			}
 		} );
 	} );
 
