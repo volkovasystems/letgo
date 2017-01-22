@@ -47,13 +47,20 @@
 
 		The catcher contains a cache with the callback.
 
-		The catcher returns the cache.
+		The catcher returns the cache by default.
 
 		The cache contains the result and callback.
 
 		Passing a custom method to letgo executes the method after consuming the callback
 			and after executing the catcher function. This will provide for a more
 			specific flow of procedures.
+
+		Passing a custom method will change the flow of the procedure. The method
+			is executed once and the result will be saved forever.
+
+		An internal cleaning mechanism allows you to clean up the cache data.
+
+		The result of the custom method will be returned instead of cache if it is given.
 	@end-module-documentation
 
 	@include:
@@ -75,34 +82,88 @@ const truly = require( "truly" );
 const vound = require( "vound" );
 const zelf = require( "zelf" );
 
+const CLEANER = Symbol( "cleaner" );
+
 const letgo = function letgo( method ){
+	/*;
+		@meta-configuration:
+			{
+				"method": "function"
+			}
+		@end-meta-configuration
+	*/
+
+	if( truly( method ) && !protype( method, FUNCTION ) ){
+		throw new Error( "invalid method" );
+	}
+
 	let self = zelf( this );
 
-	let cache = { "callback": called.bind( self )( ) };
+	let cache = { [ CLEANER ]: [ ], "callback": called.bind( self )( ) };
+
+	/*;
+		@note:
+			This is the default cleaner.
+		@end-note
+	*/
+	cache[ CLEANER ].push( function clean( ){
+		Object.getOwnPropertyNames( cache ).forEach( ( name ) => {
+			try{ cache[ name ] = undefined; }catch( error ){ }
+		} );
+	} );
 
 	let catcher = called.bind( self )( function catcher( callback ){
-
 		cache.callback = called.bind( self )( callback );
 
 		/*;
 			@note:
 				If the method is given, it will execute the method
 					after the catcher function is called.
+
+				This will return the result of the method instead of the cache.
 			@end-note
 		*/
 		if( truly( method ) && protype( method, FUNCTION ) ){
 			try{
-				vound( method, self )( cache );
+				let result = vound( method, self )( cache );
+
+				cache.result = result;
+
+				return result;
 
 			}catch( error ){
-				cache.callback( new Error( `error executing catcher custom method, ${ error }` ) );
+				return cache.callback( new Error( `error executing catcher custom method, ${ error }` ) );
 			}
 		}
 
 		return cache;
 	} );
 
+	/*;
+		@note:
+			This is the heart of the catcher-flow procedure.
+		@end-note
+	*/
 	harden( "cache", cache, catcher );
+
+	/*;
+		@note:
+			This method is provided to prevent internal memory leaks.
+		@end-note
+	*/
+	harden( "release", function release( cleaner ){
+		if( protype( cleaner, FUNCTION ) ){
+			cache[ CLEANER ].push( cleaner );
+
+			return catcher;
+		}
+
+		while( cache[ CLEANER ].length ){
+			cache[ CLEANER ].pop( )( );
+		}
+
+		return catcher;
+	}, catcher );
 
 	return catcher;
 };
