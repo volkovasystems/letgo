@@ -202,7 +202,7 @@ const letgo = function letgo( method ){
 		}
 
 		return cache[ CHECKER ].every( ( checker ) => { return checker( ); } );
-	} );
+	}, catcher );
 
 	return catcher;
 };
