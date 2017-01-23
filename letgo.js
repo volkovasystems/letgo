@@ -73,7 +73,6 @@
 			"harden": "harden",
 			"protype": "protype",
 			"truly": "truly",
-			"vound": "vound",
 			"zelf": "zelf",
 		}
 	@end-include
@@ -87,7 +86,6 @@ const filled = require( "filled" );
 const harden = require( "harden" );
 const protype = require( "protype" );
 const truly = require( "truly" );
-const vound = require( "vound" );
 const zelf = require( "zelf" );
 
 //: @support-module:
@@ -175,7 +173,7 @@ const letgo = function letgo( method ){
 		*/
 		if( truly( method ) && protype( method, FUNCTION ) ){
 			try{
-				let result = vound( method, self )( parameter.concat( cache ) );
+				let result = method.apply( self, parameter.concat( cache ) );
 
 				cache.result = result;
 
