@@ -239,8 +239,13 @@ const letgo = function letgo( method ){
 			return catcher;
 		}
 
+		/*;
+			@note:
+				If the checkers are empty it means the catcher has been reset.
+			@end-note
+		*/
 		if( arid( cache[ CHECKER ] ) ){
-			return catcher;
+			return true;
 		}
 
 		let strict = depher( arguments, BOOLEAN, false );
