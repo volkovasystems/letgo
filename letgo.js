@@ -173,7 +173,12 @@ const letgo = function letgo( method ){
 		*/
 		if( truly( method ) && protype( method, FUNCTION ) ){
 			try{
-				let result = method.apply( self, parameter.concat( cache ) );
+				/*;
+					@note:
+						Don't change this structure, cache should come first.
+					@end-note
+				*/
+				let result = method.apply( self, [ cache ].concat( parameter ) );
 
 				cache.result = result;
 
