@@ -99,6 +99,15 @@ const zelf = require( "zelf" );
 	if(!y)return!1}n++}return!0});
 //: @end-support-module
 
+//: @support-module:
+	//: @reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+	Array.prototype.some||(Array.prototype.some=function(r){"use strict";
+	if(null==this)throw new TypeError("Array.prototype.some called on null or undefined");
+	if("function"!=typeof r)throw new TypeError;for(var e=Object(this),t=e.length>>>0,
+	o=arguments.length>=2?arguments[1]:void 0,n=0;t>n;n++)
+	if(n in e&&r.call(o,e[n],n,e))return!0;return!1});
+//: @end-support-module
+
 const CLEANER = Symbol( "cleaner" );
 const CHECKER = Symbol( "checker" );
 
