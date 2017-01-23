@@ -65,7 +65,11 @@
 
 	@include:
 		{
+			"arid": "arid",
+			"budge": "budge",
 			"called": "called",
+			"depher": "depher",
+			"filled": "filled",
 			"harden": "harden",
 			"protype": "protype",
 			"truly": "truly",
@@ -75,7 +79,11 @@
 	@end-include
 */
 
+const arid = require( "arid" );
+const budge = require( "budge" );
 const called = require( "called" );
+const depher = require( "depher" );
+const filled = require( "filled" );
 const harden = require( "harden" );
 const protype = require( "protype" );
 const truly = require( "truly" );
@@ -134,12 +142,19 @@ const letgo = function letgo( method ){
 		@end-note
 	*/
 	cache[ CHECKER ].push( function check( ){
-		return ( truly( cache.callback ) && cache.callback.called( ) ) ||
-			cache[ CLEANER ].length === 0;
+		return ( truly( cache.callback ) && cache.callback.called( ) ) || arid( cache[ CLEANER ] );
 	} );
 
 	let catcher = called.bind( self )( function catcher( callback ){
 		cache.callback = called.bind( self )( callback );
+
+		/*;
+			@note:
+				Possible usage of the passed parameters as initial values.
+			@end-note
+		*/
+		let parameter = budge( arguments );
+		cache.parameter = parameter;
 
 		/*;
 			@note:
@@ -151,7 +166,7 @@ const letgo = function letgo( method ){
 		*/
 		if( truly( method ) && protype( method, FUNCTION ) ){
 			try{
-				let result = vound( method, self )( cache );
+				let result = vound( method, self )( parameter.concat( cache ) );
 
 				cache.result = result;
 
@@ -184,8 +199,22 @@ const letgo = function letgo( method ){
 			return catcher;
 		}
 
-		while( cache[ CLEANER ].length ){
-			cache[ CLEANER ].pop( )( );
+		if( arid( cache[ CLEANER ] ) ){
+			return catcher;
+		}
+
+		let reset = depher( arguments, BOOLEAN, false );
+		if( reset ){
+			while( filled( cache[ CLEANER ] ) ){
+				cache[ CLEANER ].pop( )( );
+			}
+
+			while( filled( cache[ CHECKER ] ) ){
+				cache[ CHECKER ].pop( );
+			}
+
+		}else{
+			cache[ CLEANER ].forEach( ( cleaner ) => { cleaner( ); } );
 		}
 
 		return catcher;
@@ -203,7 +232,18 @@ const letgo = function letgo( method ){
 			return catcher;
 		}
 
-		return cache[ CHECKER ].every( ( checker ) => { return checker( ); } );
+		if( arid( cache[ CHECKER ] ) ){
+			return catcher;
+		}
+
+		let strict = depher( arguments, BOOLEAN, false );
+		if( strict ){
+			return cache[ CHECKER ].every( ( checker ) => { return checker( ); } );
+
+		}else{
+			return cache[ CHECKER ].some( ( checker ) => { return checker( ); } );
+		}
+
 	}, catcher );
 
 	return catcher;
