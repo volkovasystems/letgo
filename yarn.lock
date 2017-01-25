@@ -787,13 +787,14 @@ chokidar@^1.0.0, chokidar@^1.6.1:
   optionalDependencies:
     fsevents "^1.0.0"
 
-clazof@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/clazof/-/clazof-0.3.0.tgz#d479120cf9ba37a22c6f1b44337e3125193356be"
+clazof@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/clazof/-/clazof-0.4.0.tgz#d70192b2ce345f66cf4d1c6a145428cd1298fc9b"
   dependencies:
-    babel-runtime "^6.20.0"
+    babel-runtime "^6.22.0"
     budge "^0.5.0"
     een "^0.1.0"
+    falzy "^0.7.0"
     protype "^0.8.0"
 
 cliui@^2.1.0:
@@ -929,9 +930,9 @@ dephall@^0.5.0:
     pyck "^0.5.0"
     zelf "^0.4.0"
 
-dephall@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/dephall/-/dephall-0.6.0.tgz#465c534080fd5bb4a35083293e68b972a7324b61"
+dephall@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/dephall/-/dephall-0.7.0.tgz#dd738f5e10e96bf36037cb39c9d0e9f288ef6c2a"
   dependencies:
     arid "^0.4.0"
     babel-runtime "^6.22.0"
@@ -939,7 +940,7 @@ dephall@^0.6.0:
     falze "^0.3.0"
     falzy "^0.7.0"
     harden "^0.13.0"
-    pyck "^0.6.0"
+    pyck "^0.7.0"
     zelf "^0.4.0"
 
 depher@^0.5.0:
@@ -954,12 +955,12 @@ depher@^0.5.0:
     harden "^0.12.0"
     zelf "^0.4.0"
 
-depher@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/depher/-/depher-0.6.0.tgz#f673523cae270b649bc152a6d4fcbd9ce002c76b"
+depher@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/depher/-/depher-0.7.0.tgz#b699a5639a37eb7eb3935b537ca76c053dab0cae"
   dependencies:
     babel-runtime "^6.22.0"
-    dephall "^0.6.0"
+    dephall "^0.7.0"
     doubt "^0.6.0"
     falze "^0.3.0"
     falzy "^0.7.0"
@@ -1403,7 +1404,7 @@ is-number@^2.0.2, is-number@^2.1.0:
 
 is-posix-bracket@^0.1.0:
   version "0.1.1"
-  resolved "http://registry.npmjs.org/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
+  resolved "https://registry.yarnpkg.com/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz#3334dc79774368e92f016e6fbc0a88f5cd6e6bc4"
 
 is-primitive@^2.0.0:
   version "2.0.0"
@@ -1583,13 +1584,17 @@ minimatch@^3.0.0, minimatch@^3.0.2:
   dependencies:
     brace-expansion "^1.0.0"
 
-minimist@0.0.8, minimist@~0.0.1:
+minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
 
 minimist@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
+
+minimist@~0.0.1:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.10.tgz#de3f98543dbf96082be48ad1a0c7cda836301dcf"
 
 "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
@@ -1821,12 +1826,12 @@ pyck@^0.5.0:
     truu "^0.4.0"
     zelf "^0.4.0"
 
-pyck@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/pyck/-/pyck-0.6.0.tgz#cdcd9686687767150b811f7d2f9207e078a78586"
+pyck@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/pyck/-/pyck-0.7.0.tgz#9f22760293662e1d3817de9e9a7c803665578323"
   dependencies:
     babel-runtime "^6.22.0"
-    clazof "^0.3.0"
+    clazof "^0.4.0"
     doubt "^0.6.0"
     falze "^0.3.0"
     falzy "^0.7.0"
