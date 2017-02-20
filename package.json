@@ -1,12 +1,13 @@
 {
   "name": "letgo",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.js",
   "support": "letgo.support.js",
   "deploy": "letgo.deploy.js",
+  "browser": "letgo.deploy.js",
   "scripts": {
-    "build": "babel letgo.js -o letgo.support.js && webpack",
+    "build": "babel letgo.js --out-file letgo.support.js --source-maps && webpack --progress --display-modules",
     "test": "mocha letgo-test.js"
   },
   "repository": {
@@ -30,23 +31,23 @@
   },
   "homepage": "https://github.com/volkovasystems/letgo#readme",
   "dependencies": {
-    "arid": "^0.7.0",
-    "babel-runtime": "^6.22.0",
-    "budge": "^0.6.0",
-    "called": "^0.9.0",
-    "depher": "^0.8.0",
-    "filled": "^0.6.0",
-    "harden": "^0.14.0",
-    "protype": "^0.11.0",
-    "truly": "^0.9.0",
-    "zelf": "^0.6.0"
+    "arid": "^0.15.0",
+    "babel-runtime": "^6.23.0",
+    "budge": "^0.13.0",
+    "called": "^0.13.0",
+    "depher": "^0.15.0",
+    "filled": "^0.11.0",
+    "harden": "^0.16.0",
+    "protype": "^0.17.0",
+    "truly": "^0.13.0",
+    "zelf": "^0.8.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-core": "^6.22.1",
-    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-latest": "^6.22.0",
     "source-map-loader": "^0.1.6",
-    "webpack": "^1.14.0"
+    "webpack": "^2.2.1"
   }
 }
