@@ -1,5 +1,3 @@
-"use strict";
-
 const letgo = require( "./letgo.js" );
 
 let catcher = letgo.bind( { } )( function test( callback ){
