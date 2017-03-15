@@ -91,23 +91,19 @@ const protype = require( "protype" );
 const truly = require( "truly" );
 const zelf = require( "zelf" );
 
-//: @support-module:
 	//: @reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every
 	Array.prototype.every||(Array.prototype.every=function(r,t){"use strict";
 	var e,n;if(null==this)throw new TypeError("this is null or not defined");
 	var o=Object(this),i=o.length>>>0;if("function"!=typeof r)throw new TypeError;
 	for(arguments.length>1&&(e=t),n=0;i>n;){var f;if(n in o){f=o[n];var y=r.call(e,f,n,o);
 	if(!y)return!1}n++}return!0});
-//: @end-support-module
 
-//: @support-module:
 	//: @reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
 	Array.prototype.some||(Array.prototype.some=function(r){"use strict";
 	if(null==this)throw new TypeError("Array.prototype.some called on null or undefined");
 	if("function"!=typeof r)throw new TypeError;for(var e=Object(this),t=e.length>>>0,
 	o=arguments.length>=2?arguments[1]:void 0,n=0;t>n;n++)
 	if(n in e&&r.call(o,e[n],n,e))return!0;return!1});
-//: @end-support-module
 
 const CLEANER = Symbol( "cleaner" );
 const CHECKER = Symbol( "checker" );
@@ -188,7 +184,7 @@ const letgo = function letgo( method ){
 				return result;
 
 			}catch( error ){
-				return cache.callback( new Error( `error executing catcher custom method, ${ error }` ) );
+				return cache.callback( new Error( `error executing catcher custom method, ${ error.stack }` ) );
 			}
 		}
 
