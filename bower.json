@@ -1,6 +1,6 @@
 {
   "name": "letgo",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.deploy.js",
   "support": "letgo.support.js",
@@ -26,9 +26,9 @@
   ],
   "dependencies": {
     "arid": "^0.23.0",
-    "budge": "^0.19.0",
-    "called": "^0.18.0",
-    "depher": "^0.23.0",
+    "budge": "^0.20.0",
+    "called": "^0.20.0",
+    "depher": "^0.25.0",
     "filled": "^0.19.0",
     "harden": "^0.21.0",
     "protype": "^0.21.0",
