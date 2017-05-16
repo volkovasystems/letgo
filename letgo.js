@@ -72,6 +72,7 @@
 			"budge": "budge",
 			"called": "called",
 			"depher": "depher",
+			"exec": "execd",
 			"filled": "filled",
 			"harden": "harden",
 			"protype": "protype",
@@ -148,7 +149,7 @@ const letgo = function letgo( method ){
 		@end-note
 	*/
 	cache[ CHECKER ].push( function check( ){
-		return ( truly( cache.callback ) && cache.callback.called( ) ) || arid( cache[ CLEANER ] );
+		return ( truly( cache.callback ) && execd( cache.callback ) || arid( cache[ CLEANER ] ) );
 	} );
 
 	let catcher = called.bind( self )( function catcher( callback ){
