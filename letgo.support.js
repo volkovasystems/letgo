@@ -86,6 +86,7 @@ var arid = require("arid");
 var budge = require("budge");
 var called = require("called");
 var depher = require("depher");
+var execd = require("execd");
 var filled = require("filled");
 var harden = require("harden");
 var protype = require("protype");
