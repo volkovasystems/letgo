@@ -1,6 +1,6 @@
 {
   "name": "letgo",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.deploy.js",
   "support": "letgo.support.js",
