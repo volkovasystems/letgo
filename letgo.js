@@ -86,6 +86,7 @@ const arid = require( "arid" );
 const budge = require( "budge" );
 const called = require( "called" );
 const depher = require( "depher" );
+const execd = require( "execd" );
 const filled = require( "filled" );
 const harden = require( "harden" );
 const protype = require( "protype" );
