@@ -164,8 +164,7 @@ const catcher = function catcher( method, context ){
 				}
 			@end-meta-configuration
 		*/
-
-		if( error instanceof Error  && protype( this[ DEFER ], FUNCTION ) ){
+		if( ( error instanceof Error ) && protype( this[ DEFER ], FUNCTION ) ){
 			this[ DEFER ]( error );
 		}
 
@@ -185,7 +184,7 @@ const catcher = function catcher( method, context ){
 			if( arid( arguments ) ){
 				result = callback.call( context );
 
-				this.release( );
+				flush.bind( this )( );
 
 				return result;
 
@@ -198,9 +197,11 @@ const catcher = function catcher( method, context ){
 		}catch( issue ){
 			error = issue;
 
-			if( protype( this[ DEFER ], FUNCTION ) ){
-				this[ DEFER ]( error );
-			}
+			result = undefined;
+		}
+
+		if( result instanceof Error ){
+			error = result;
 
 			result = undefined;
 		}
@@ -274,6 +275,12 @@ const catcher = function catcher( method, context ){
 		}catch( error ){
 			throw new Error( `failed flow method, ${ error.stack }` );
 		}
+	};
+
+	let flush = function flush( ){
+		while( this[ CALLBACK ].length ) this[ CALLBACK ].pop( );
+
+		return this;
 	};
 
 	Catcher.prototype.initialize = function initialize( callback, parameter ){
@@ -368,10 +375,12 @@ const catcher = function catcher( method, context ){
 		if( strict === true ){
 			let self = this;
 
-			this[ DEFER ] = called.bind( context )( ( error ) => {
+			this[ DEFER ] = called.bind( context )( function delegate( error ){
 				handler.call( this, error );
 
-				self.release( );
+				flush.bind( self )( );
+
+				return this;
 			} );
 
 		}else{
@@ -382,11 +391,15 @@ const catcher = function catcher( method, context ){
 	};
 
 	Catcher.prototype.release = function release( ){
-		while( this[ CALLBACK ].length ) this[ CALLBACK ].pop( );
+		flush.bind( this )( );
 
 		delete this[ CALLBACK ];
+		delete this[ DEFER ];
 
-		return this;
+		let result = this[ RESULT ];
+		delete this[ RESULT ];
+
+		return result;
 	};
 
 	Catcher.prototype.result = function result( ){

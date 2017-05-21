@@ -164,7 +164,6 @@ var catcher = function catcher(method, context) {
                                                      		}
                                                      	@end-meta-configuration
                                                      */
-
 		if (error instanceof Error && protype(this[DEFER], FUNCTION)) {
 			this[DEFER](error);
 		}
@@ -185,7 +184,7 @@ var catcher = function catcher(method, context) {
 			if (arid(arguments)) {
 				result = callback.call(context);
 
-				this.release();
+				flush.bind(this)();
 
 				return result;
 
@@ -198,9 +197,11 @@ var catcher = function catcher(method, context) {
 		} catch (issue) {
 			error = issue;
 
-			if (protype(this[DEFER], FUNCTION)) {
-				this[DEFER](error);
-			}
+			result = undefined;
+		}
+
+		if (result instanceof Error) {
+			error = result;
 
 			result = undefined;
 		}
@@ -276,6 +277,12 @@ var catcher = function catcher(method, context) {
 		}
 	};
 
+	var flush = function flush() {
+		while (this[CALLBACK].length) {this[CALLBACK].pop();}
+
+		return this;
+	};
+
 	Catcher.prototype.initialize = function initialize(callback, parameter) {
 		/*;
                                                                           	@meta-configuration:
@@ -347,15 +354,15 @@ var catcher = function catcher(method, context) {
 		return this;
 	};
 
-	Catcher.prototype.defer = function defer(handler, strict) {var _this = this;
+	Catcher.prototype.defer = function defer(handler, strict) {
 		/*;
-                                                                              	@meta-configuration:
-                                                                              		{
-                                                                              			"handler:required": "function",
-                                                                              			"strict": "boolean"
-                                                                              		}
-                                                                              	@end-meta-configuration
-                                                                              */
+                                                            	@meta-configuration:
+                                                            		{
+                                                            			"handler:required": "function",
+                                                            			"strict": "boolean"
+                                                            		}
+                                                            	@end-meta-configuration
+                                                            */
 
 		if (kein(DEFER, this)) {
 			return this;
@@ -368,10 +375,12 @@ var catcher = function catcher(method, context) {
 		if (strict === true) {
 			var self = this;
 
-			this[DEFER] = called.bind(context)(function (error) {
-				handler.call(_this, error);
+			this[DEFER] = called.bind(context)(function delegate(error) {
+				handler.call(this, error);
 
-				self.release();
+				flush.bind(self)();
+
+				return this;
 			});
 
 		} else {
@@ -382,13 +391,15 @@ var catcher = function catcher(method, context) {
 	};
 
 	Catcher.prototype.release = function release() {
-		console.log("release");
-
-		while (this[CALLBACK].length) {this[CALLBACK].pop();}
+		flush.bind(this)();
 
 		delete this[CALLBACK];
+		delete this[DEFER];
 
-		return this;
+		var result = this[RESULT];
+		delete this[RESULT];
+
+		return result;
 	};
 
 	Catcher.prototype.result = function result() {
