@@ -1,13 +1,18 @@
 yarn add \
 babel-runtime \
 arid \
+asea \
+backd \
 budge \
 called \
-depher \
+diatom \
 execd \
-filled \
-harden \
+falzy \
+kein \
 protype \
+raze \
+statis \
+stringe \
 truly \
 zelf \
 --save && \
@@ -21,13 +26,18 @@ webpack \
 --dev && \
 bower install \
 arid \
+asea \
+backd \
 budge \
 called \
-depher \
+diatom \
 execd \
-filled \
-harden \
+falzy \
+kein \
 protype \
+raze \
+statis \
+stringe \
 truly \
 zelf \
 --save \
