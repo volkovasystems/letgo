@@ -122,6 +122,13 @@ const catcher = function catcher( method, context ){
 			}
 
 			return this[ INSTANCE ].release( );
+		} )
+		.implement( "record", function record( result ){
+			if( !kein( INSTANCE, this ) ){
+				throw new Error( "cannot record result on inactive catcher" );
+			}
+
+			return this[ INSTANCE ].record( result );
 		} );
 
 	/*;
@@ -143,20 +150,6 @@ const catcher = function catcher( method, context ){
 		}
 
 		this[ CALLBACK ].push( backd.bind( context )( callback ) );
-
-		return this;
-	};
-
-	let record = function record( result ){
-		/*;
-			@meta-configuration:
-				{
-					"result:required": "*",
-				}
-			@end-meta-configuration
-		*/
-
-		this[ RESULT ] = result;
 
 		return this;
 	};
@@ -242,9 +235,9 @@ const catcher = function catcher( method, context ){
 		try{
 			if( asea.server ){
 				process.nextTick( function later( ){
-					let { self, context, parameter, method, record, next } = this;
+					let { self, context, parameter, method, next } = this;
 
-					record.bind( self )( method.apply( context, [
+					self.record( method.apply( context, [
 						backd.bind( self )( next )
 					].concat( parameter ) ) );
 
@@ -253,15 +246,14 @@ const catcher = function catcher( method, context ){
 					"context": context,
 					"parameter": parameter,
 					"method": method,
-					"record": record,
 					"next": next
 				} ) );
 
 			}else if( asea.client ){
 				let timeout = setTimeout( function later( ){
-					let { self, context, parameter, method, record, next } = this;
+					let { self, context, parameter, method, next } = this;
 
-					record.bind( self )( method.apply( context, [
+					self.record( method.apply( context, [
 						backd.bind( self )( next )
 					].concat( parameter ) ) );
 
@@ -272,7 +264,6 @@ const catcher = function catcher( method, context ){
 					"context": context,
 					"parameter": parameter,
 					"method": method,
-					"record": record,
 					"next": next
 				} ) );
 			}
@@ -393,6 +384,20 @@ const catcher = function catcher( method, context ){
 		}else{
 			this[ DEFER ] = called.bind( context )( handler );
 		}
+
+		return this;
+	};
+
+	Catcher.prototype.record = function record( result ){
+		/*;
+			@meta-configuration:
+				{
+					"result:required": "*",
+				}
+			@end-meta-configuration
+		*/
+
+		this[ RESULT ] = result;
 
 		return this;
 	};

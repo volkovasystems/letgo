@@ -122,6 +122,13 @@ var catcher = function catcher(method, context) {
 		}
 
 		return this[INSTANCE].release();
+	}).
+	implement("record", function record(result) {
+		if (!kein(INSTANCE, this)) {
+			throw new Error("cannot record result on inactive catcher");
+		}
+
+		return this[INSTANCE].record(result);
 	});
 
 	/*;
@@ -143,20 +150,6 @@ var catcher = function catcher(method, context) {
 		}
 
 		this[CALLBACK].push(backd.bind(context)(callback));
-
-		return this;
-	};
-
-	var record = function record(result) {
-		/*;
-                                       	@meta-configuration:
-                                       		{
-                                       			"result:required": "*",
-                                       		}
-                                       	@end-meta-configuration
-                                       */
-
-		this[RESULT] = result;
 
 		return this;
 	};
@@ -242,9 +235,9 @@ var catcher = function catcher(method, context) {
 		try {
 			if (asea.server) {
 				process.nextTick(function later() {var
-					self = this.self,context = this.context,parameter = this.parameter,method = this.method,record = this.record,next = this.next;
+					self = this.self,context = this.context,parameter = this.parameter,method = this.method,next = this.next;
 
-					record.bind(self)(method.apply(context, [
+					self.record(method.apply(context, [
 					backd.bind(self)(next)].
 					concat(parameter)));
 
@@ -253,15 +246,14 @@ var catcher = function catcher(method, context) {
 					"context": context,
 					"parameter": parameter,
 					"method": method,
-					"record": record,
 					"next": next }));
 
 
 			} else if (asea.client) {
 				var timeout = setTimeout(function later() {var
-					self = this.self,context = this.context,parameter = this.parameter,method = this.method,record = this.record,next = this.next;
+					self = this.self,context = this.context,parameter = this.parameter,method = this.method,next = this.next;
 
-					record.bind(self)(method.apply(context, [
+					self.record(method.apply(context, [
 					backd.bind(self)(next)].
 					concat(parameter)));
 
@@ -272,7 +264,6 @@ var catcher = function catcher(method, context) {
 					"context": context,
 					"parameter": parameter,
 					"method": method,
-					"record": record,
 					"next": next }));
 
 			}
@@ -393,6 +384,20 @@ var catcher = function catcher(method, context) {
 		} else {
 			this[DEFER] = called.bind(context)(handler);
 		}
+
+		return this;
+	};
+
+	Catcher.prototype.record = function record(result) {
+		/*;
+                                                     	@meta-configuration:
+                                                     		{
+                                                     			"result:required": "*",
+                                                     		}
+                                                     	@end-meta-configuration
+                                                     */
+
+		this[RESULT] = result;
 
 		return this;
 	};
