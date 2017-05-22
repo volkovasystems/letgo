@@ -115,6 +115,13 @@ const catcher = function catcher( method, context ){
 			}
 
 			return this[ INSTANCE ].done( );
+		} )
+		.implement( "release", function release( ){
+			if( !kein( INSTANCE, this ) ){
+				throw new Error( "cannot release inactive catcher" );
+			}
+
+			return this[ INSTANCE ].release( );
 		} );
 
 	/*;
