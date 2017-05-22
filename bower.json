@@ -1,6 +1,6 @@
 {
   "name": "letgo",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.deploy.js",
   "support": "letgo.support.js",
@@ -24,9 +24,6 @@
     "test",
     "tests"
   ],
-  "resolutions": {
-    "diatom": "^0.28.0"
-  },
   "dependencies": {
     "arid": "^0.25.0",
     "asea": "^0.13.0",
@@ -39,7 +36,7 @@
     "kein": "^0.25.0",
     "protype": "^0.21.0",
     "raze": "^0.29.0",
-    "statis": "^0.9.0",
+    "statis": "^0.11.0",
     "stringe": "^0.3.0",
     "truly": "^0.18.0",
     "zelf": "^0.11.0"
