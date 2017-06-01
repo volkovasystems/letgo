@@ -52,16 +52,19 @@
               			"arid": "arid",
               			"asea": "asea",
               			"backd": "backd",
-              			"budge": "budge",
               			"called": "called",
               			"diatom": "diatom",
+              			"edo": "edo",
               			"execd": "execd",
               			"falzy": "falzy",
+              			"heredito": "heredito",
               			"kein": "kein",
               			"protype": "protype",
               			"raze": "raze",
+              			"shft": "shft",
               			"statis": "statis",
               			"stringe": "stringe",
+              			"symbiote": "symbiote",
               			"truly": "truly",
               			"zelf": "zelf"
               		}
@@ -71,44 +74,61 @@
 var arid = require("arid");
 var asea = require("asea");
 var backd = require("backd");
-var budge = require("budge");
 var called = require("called");
 var diatom = require("diatom");
+var edo = require("edo");
 var execd = require("execd");
 var falzy = require("falzy");
+var heredito = require("heredito");
 var kein = require("kein");
 var protype = require("protype");
 var raze = require("raze");
+var shft = require("shft");
 var statis = require("statis");
 var stringe = require("stringe");
+var symbiote = require("symbiote");
 var truly = require("truly");
 var zelf = require("zelf");
 
+var CACHE = (0, _symbol2.default)("cache");
 var CALLBACK = (0, _symbol2.default)("callback");
 var DEFER = (0, _symbol2.default)("defer");
+var EVENT = (0, _symbol2.default)("event");
 var INSTANCE = (0, _symbol2.default)("instance");
 var RESULT = (0, _symbol2.default)("result");
+var STOPPED = (0, _symbol2.default)("stopped");
 
-var catcher = function catcher(method, context) {
+var catcher = function catcher(method) {
 	/*;
-                                                 	@meta-configuration:
-                                                 		{
-                                                 			"method": "function",
-                                                 			"context": "*"
-                                                 		}
-                                                 	@end-meta-configuration
-                                                 */
+                                        	@meta-configuration:
+                                        		{
+                                        			"method": "function"
+                                        		}
+                                        	@end-meta-configuration
+                                        */
 
 	if (truly(method) && !protype(method, FUNCTION)) {
 		throw new Error("invalid method");
 	}
 
-	context = zelf(context);
-	method = called.bind(context)(method);
+	var context = zelf(this);
+
+	if (truly(method)) {
+		method = called.bind(context)(method);
+	}
 
 	var Catcher = diatom("Catcher");
 
+	/*;
+                                  	@note:
+                                  		We should create an instance of the Event here.
+                                  	@end-note
+                                  */
+	var event = edo.bind(context)()();
+
 	statis(Catcher).
+	attach(EVENT, event).
+	attach(CACHE, {}).
 	implement("done", function done() {
 		if (!kein(INSTANCE, this)) {
 			return false;
@@ -124,18 +144,95 @@ var catcher = function catcher(method, context) {
 		return this[INSTANCE].release();
 	}).
 	implement("record", function record(result) {
+		/*;
+                                              	@meta-configuration:
+                                              		{
+                                              			"result:required": "*"
+                                              		}
+                                              	@end-meta-configuration
+                                              */
+
 		if (!kein(INSTANCE, this)) {
 			throw new Error("cannot record result on inactive catcher");
 		}
 
 		return this[INSTANCE].record(result);
-	});
+	}).
+	implement("pass", function pass(parameter) {
+		/*;
+                                             	@meta-configuration:
+                                             		{
+                                             			"parameter:required": "..."
+                                             		}
+                                             	@end-meta-configuration
+                                             */
+
+		parameter = raze(arguments);
+
+		if (kein(INSTANCE, this)) {
+			return this[INSTANCE].pass.apply(this[INSTANCE], parameter);
+		}
+
+		return this.apply(context, parameter);
+	}).
+	implement("stop", function stop() {
+		if (kein(INSTANCE, this)) {
+			this.release();
+		}
+
+		this.emit("release");
+		this.flush();
+
+		return this;
+	}).
+	implement("set", function set(property, value) {
+		/*;
+                                                 	@meta-configuration:
+                                                 		{
+                                                 			"property:required": [
+                                                 				"number",
+                                                 				"string",
+                                                 				"symbol"
+                                                 			],
+                                                 			"value": "*"
+                                                 		}
+                                                 	@end-meta-configuration
+                                                 */
+
+		if (falzy(property) || !protype(property, NUMBER + STRING + SYMBOL)) {
+			throw new Error("invalid property");
+		}
+
+		this[CACHE][property] = value;
+
+		return this;
+	}).
+	implement("get", function get(property) {
+		/*;
+                                          	@meta-configuration:
+                                          		{
+                                          			"property:required": [
+                                          				"number",
+                                          				"string",
+                                          				"symbol"
+                                          			]
+                                          		}
+                                          	@end-meta-configuration
+                                          */
+
+		if (falzy(property) || !protype(property, NUMBER + STRING + SYMBOL)) {
+			throw new Error("invalid property");
+		}
+
+		return this[CACHE][property];
+	}).
+	merge(event);
 
 	/*;
-     	@note:
-     		These methods should not be accessible outside through the catcher.
-     	@end-note
-     */
+               	@note:
+               		These methods should not be accessible outside through the catcher.
+               	@end-note
+               */
 	var push = function push(callback) {
 		/*;
                                      	@meta-configuration:
@@ -189,7 +286,7 @@ var catcher = function catcher(method, context) {
 				return result;
 
 			} else {
-				parameter = budge(arguments, 2);
+				parameter = shft(arguments, 2);
 
 				result = callback.apply(context, [error, result].concat(parameter));
 			}
@@ -231,6 +328,12 @@ var catcher = function catcher(method, context) {
                                       */
 
 		parameter = raze(arguments);
+
+		this.set("parameter", parameter);
+
+		if (falzy(method)) {
+			return this;
+		}
 
 		try {
 			if (asea.server) {
@@ -295,12 +398,16 @@ var catcher = function catcher(method, context) {
 			throw new Error("invalid callback");
 		}
 
-		Catcher[INSTANCE] = this;
+		parameter = shft(arguments);
 
-		parameter = budge(arguments);
+		var self = Catcher[INSTANCE] = this;
+
+		this[CALLBACK] = [];
+
+		this[CACHE] = Catcher[CACHE];
 
 		try {
-			this[CALLBACK] = [];
+			this.merge(Catcher[EVENT]);
 
 			push.bind(this)(callback);
 
@@ -317,7 +424,12 @@ var catcher = function catcher(method, context) {
 	};
 
 	Catcher.prototype.done = function done() {
-		return arid(this[CALLBACK]) && execd(method);
+		if (truly(method)) {
+			return arid(this[CALLBACK]) && execd(method);
+
+		} else {
+			return arid(this[CALLBACK]);
+		}
 	};
 
 	Catcher.prototype.then = function then(callback) {
@@ -414,8 +526,59 @@ var catcher = function catcher(method, context) {
 		return result;
 	};
 
+	Catcher.prototype.stop = function stop() {
+		this.release();
+
+		this.emit("release");
+
+		return this;
+	};
+
 	Catcher.prototype.result = function result() {
 		return this[RESULT];
+	};
+
+	Catcher.prototype.set = function set(property, value) {
+		/*;
+                                                        	@meta-configuration:
+                                                        		{
+                                                        			"property:required": [
+                                                        				"number",
+                                                        				"string",
+                                                        				"symbol"
+                                                        			],
+                                                        			"value": "*"
+                                                        		}
+                                                        	@end-meta-configuration
+                                                        */
+
+		if (falzy(property) || !protype(property, NUMBER + STRING + SYMBOL)) {
+			throw new Error("invalid property");
+		}
+
+		this[CACHE][property] = value;
+
+		return this;
+	};
+
+	Catcher.prototype.get = function get(property) {
+		/*;
+                                                 	@meta-configuration:
+                                                 		{
+                                                 			"property:required": [
+                                                 				"number",
+                                                 				"string",
+                                                 				"symbol"
+                                                 			]
+                                                 		}
+                                                 	@end-meta-configuration
+                                                 */
+
+		if (falzy(property) || !protype(property, NUMBER + STRING + SYMBOL)) {
+			throw new Error("invalid property");
+		}
+
+		return this[CACHE][property];
 	};
 
 	Catcher.prototype.valueOf = function valueOf() {
@@ -425,6 +588,10 @@ var catcher = function catcher(method, context) {
 	Catcher.prototype.toString = function toString() {
 		return stringe(this.result());
 	};
+
+	Catcher = heredito(Catcher, edo.bind(context)());
+
+	Catcher = symbiote(Catcher, "Event");
 
 	return Catcher;
 };

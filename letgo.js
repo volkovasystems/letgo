@@ -84,9 +84,7 @@ const letgo = function letgo( method ){
 		throw new Error( "invalid method" );
 	}
 
-	let self = zelf( this );
-
-	return catcher( method, self );
+	return catcher.bind( zelf( this ) )( method );
 };
 
 module.exports = letgo;
