@@ -65,6 +65,8 @@ catcher.then( function callback2( error, result, value ){
 
 .defer( function handler( error ){
 	assert.deepEqual( error.message, "sample error", "should be equal" );
+}, true )
 
+.lastly( function laslty( ){
 	console.log( "ok" );
-}, true );
+} );

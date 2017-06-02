@@ -1475,9 +1475,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edo@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/edo/-/edo-0.6.0.tgz#5b2191f91650f392a91888910caec129310a0b01"
+edo@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/edo/-/edo-0.7.0.tgz#8604f6f0ab0f3eb927bd7a56dbfd680d05db37e7"
   dependencies:
     arid "^0.25.0"
     arkount "^0.7.0"
@@ -1508,6 +1508,7 @@ edo@^0.6.0:
     statis "^0.12.0"
     symbiote "^0.19.0"
     valu "^0.0.0"
+    wichevr "^0.9.0"
     zelf "^0.11.0"
 
 een@^0.18.0:

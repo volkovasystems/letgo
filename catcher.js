@@ -173,7 +173,9 @@ var catcher = function catcher(method) {
 			return this[INSTANCE].pass.apply(this[INSTANCE], parameter);
 		}
 
-		return this.apply(context, parameter);
+		this.emit.apply(context, ["pass:catcher"].concat(parameter));
+
+		return this;
 	}).
 	implement("stop", function stop() {
 		if (kein(INSTANCE, this)) {
@@ -226,6 +228,23 @@ var catcher = function catcher(method) {
 
 		return this[CACHE][property];
 	}).
+	implement("lastly", function lastly(callback) {
+		/*;
+                                                	@meta-configuration:
+                                                		{
+                                                			"callback:required": "function"
+                                                		}
+                                                	@end-meta-configuration
+                                                */
+
+		if (falzy(callback) || !protype(callback, FUNCTION)) {
+			throw new Error("invalid callback");
+		}
+
+		this.once("lastly", callback);
+
+		return this;
+	}).
 	merge(event);
 
 	/*;
@@ -268,6 +287,8 @@ var catcher = function catcher(method) {
 		var callback = this[CALLBACK].splice(0, 1).pop();
 
 		if (falzy(callback)) {
+			this.emit("lastly");
+
 			return result;
 		}
 
@@ -412,6 +433,14 @@ var catcher = function catcher(method) {
 			push.bind(this)(callback);
 
 			flow.apply(this, parameter);
+
+			this.on("pass:catcher", function pass() {
+				self.pass.apply(self, raze(arguments));
+			});
+
+			this.lastly(function lastly() {
+				self.stop();
+			});
 
 			return this;
 
@@ -579,6 +608,24 @@ var catcher = function catcher(method) {
 		}
 
 		return this[CACHE][property];
+	};
+
+	Catcher.prototype.lastly = function lastly(callback) {
+		/*;
+                                                       	@meta-configuration:
+                                                       		{
+                                                       			"callback:required": "function"
+                                                       		}
+                                                       	@end-meta-configuration
+                                                       */
+
+		if (falzy(callback) || !protype(callback, FUNCTION)) {
+			throw new Error("invalid callback");
+		}
+
+		this.once("lastly", callback);
+
+		return this;
 	};
 
 	Catcher.prototype.valueOf = function valueOf() {
