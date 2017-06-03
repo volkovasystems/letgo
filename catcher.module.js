@@ -57,6 +57,7 @@
 			"edo": "edo",
 			"execd": "execd",
 			"falzy": "falzy",
+			"filled": "filled",
 			"heredito": "heredito",
 			"kein": "kein",
 			"protype": "protype",
@@ -79,6 +80,7 @@ const diatom = require( "diatom" );
 const edo = require( "edo" );
 const execd = require( "execd" );
 const falzy = require( "falzy" );
+const filled = require( "filled" );
 const heredito = require( "heredito" );
 const kein = require( "kein" );
 const protype = require( "protype" );
@@ -332,7 +334,7 @@ const catcher = function catcher( method ){
 					to continue the chain or halts the chain.
 			@end-note
 		*/
-		if( !( result instanceof Catcher ) ){
+		if( !( result instanceof Catcher ) && filled( this[ CALLBACK ] ) ){
 			next.apply( this, [ error, result ].concat( parameter ) );
 		}
 

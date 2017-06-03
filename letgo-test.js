@@ -10,6 +10,8 @@ let catcher = letgo.bind( { "hello": 12345 }  )( function test( callback, value 
 
 	assert.deepEqual( this, { "hello": 12345 } , "should be equal" );
 
+	console.log( "called", calls );
+
 	return callback( null, value, "hello yeah" );
 } );
 
@@ -24,10 +26,10 @@ catcher = catcher( function callback( error, result, value ){
 
 	assert.deepEqual( this, { "hello": 12345 } , "should be equal" );
 
+	console.log( "called", calls );
+
 	return Array.from( arguments );
 }, "hello world" );
-
-catcher.on( "release" );
 
 catcher.then( function callback2( error, result, value ){
 	calls.push( "callback2" );
@@ -39,6 +41,8 @@ catcher.then( function callback2( error, result, value ){
 	assert.equal( arguments.length, 3, "should be equal" );
 
 	assert.deepEqual( this, { "hello": 12345 } , "should be equal" );
+
+	console.log( "called", calls );
 
 	return catcher.pass( null, 123, 456 );
 } )
@@ -52,10 +56,14 @@ catcher.then( function callback2( error, result, value ){
 
 	assert.deepEqual( this, { "hello": 12345 } , "should be equal" );
 
+	console.log( "called", calls );
+
 	return true;
 } )
 
 .then( function callback4( error, result, value ){
+	console.log( "called callback 4" );
+
 	throw new Error( "sample error" );
 } )
 
@@ -65,8 +73,19 @@ catcher.then( function callback2( error, result, value ){
 
 .defer( function handler( error ){
 	assert.deepEqual( error.message, "sample error", "should be equal" );
+
+	console.log( "called error" );
 }, true )
 
 .lastly( function laslty( ){
 	console.log( "ok" );
 } );
+
+let catcherTest = letgo.bind( { "hello": "world" } )( );
+catcherTest = catcherTest( function hello( ){
+	assert.deepEqual( Array.from( arguments ), [ null, "hello", 1, 2, 3 ], "should be deeply equal" );
+
+	console.log( "ok" );
+} );
+
+catcherTest.pass( null, "hello", 1, 2, 3 );
