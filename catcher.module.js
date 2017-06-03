@@ -31,7 +31,7 @@
 		{
 			"package": "letgo",
 			"path": "letgo/catcher.module.js",
-			"file": "catcher.js",
+			"file": "catcher.module.js",
 			"module": "letgo",
 			"author": "Richeve S. Bebedor",
 			"eMail": "richeve.bebedor@gmail.com",
