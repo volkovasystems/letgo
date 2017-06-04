@@ -1,6 +1,6 @@
 {
   "name": "letgo",
-  "version": "0.42.0",
+  "version": "0.43.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.js",
   "support": "letgo.support.js",
@@ -50,6 +50,7 @@
     "stringe": "^0.3.0",
     "symbiote": "^0.20.0",
     "truly": "^0.18.0",
+    "wichis": "^0.13.0",
     "zelf": "^0.11.0"
   },
   "devDependencies": {

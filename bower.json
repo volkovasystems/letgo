@@ -1,6 +1,6 @@
 {
   "name": "letgo",
-  "version": "0.42.0",
+  "version": "0.43.0",
   "description": "Construct a catcher flow procedure.",
   "main": "letgo.deploy.js",
   "support": "letgo.support.js",
@@ -37,9 +37,9 @@
     "condev": "^0.12.0",
     "exempt": "^0.12.0",
     "dephall": "^0.32.0",
+    "deequal": "^0.10.0",
     "enyof": "^0.7.0",
     "nsrt": "^0.8.0",
-    "deequal": "^0.10.0",
     "loosen": "^0.22.0",
     "u200b": "^0.29.0",
     "karv": "^0.10.0",
@@ -69,6 +69,7 @@
     "stringe": "^0.3.0",
     "symbiote": "^0.20.0",
     "truly": "^0.18.0",
+    "wichis": "^0.13.0",
     "zelf": "^0.11.0"
   }
 }

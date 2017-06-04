@@ -67,6 +67,7 @@
 			"stringe": "stringe",
 			"symbiote": "symbiote",
 			"truly": "truly",
+			"wichis": "wichis",
 			"zelf": "zelf"
 		}
 	@end-include
@@ -90,6 +91,7 @@ const statis = require( "statis" );
 const stringe = require( "stringe" );
 const symbiote = require( "symbiote" );
 const truly = require( "truly" );
+const wichis = require( "wichis" );
 const zelf = require( "zelf" );
 
 const CACHE = Symbol( "cache" );
@@ -131,6 +133,7 @@ const catcher = function catcher( method ){
 	statis( Catcher )
 		.attach( EVENT, event )
 		.attach( CACHE, { } )
+		.attach( CALLBACK, [ ] )
 		.implement( "done", function done( ){
 			if( !kein( INSTANCE, this ) ){
 				return false;
@@ -247,6 +250,48 @@ const catcher = function catcher( method ){
 
 			return this;
 		} )
+		.implement( "push", function push( callback ){
+			/*;
+				@meta-configuration:
+					{
+						"callback": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
+				throw new Error( "invalid callback" );
+			}
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].push( callback );
+			}
+
+			this[ CALLBACK ].push( backd.bind( context )( callback ) );
+
+			return this;
+		} )
+		.implement( "then", function then( callback ){
+			/*;
+				@meta-configuration:
+					{
+						"callback": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
+				throw new Error( "invalid callback" );
+			}
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].then( callback );
+			}
+
+			this[ CALLBACK ].push( backd.bind( context )( callback ) );
+
+			return this;
+		} )
 		.merge( event );
 
 	/*;
@@ -289,6 +334,8 @@ const catcher = function catcher( method ){
 		let callback = this[ CALLBACK ].splice( 0, 1 ).pop( );
 
 		if( falzy( callback ) ){
+			this.set( "result", result );
+
 			this.emit( "lastly" );
 
 			return result;
@@ -305,6 +352,8 @@ const catcher = function catcher( method ){
 				result = callback.call( context );
 
 				flush.bind( this )( );
+
+				this.set( "result", result );
 
 				return result;
 
@@ -325,6 +374,8 @@ const catcher = function catcher( method ){
 
 			result = undefined;
 		}
+
+		this.set( "result", result );
 
 		/*;
 			@note:
@@ -392,6 +443,9 @@ const catcher = function catcher( method ){
 					"method": method,
 					"next": next
 				} ) );
+
+			}else{
+				throw new Error( "cannot determine platform, platform not supported" );
 			}
 
 			return this;
@@ -417,24 +471,24 @@ const catcher = function catcher( method ){
 			@end-meta-configuration
 		*/
 
-		if( falzy( callback ) || !protype( callback, FUNCTION ) ){
-			throw new Error( "invalid callback" );
-		}
-
 		parameter = shft( arguments );
 
 		let self = Catcher[ INSTANCE ] = this;
 
-		this[ CALLBACK ] = [ ];
+		this[ CALLBACK ] = wichis( Catcher[ CALLBACK ], [ ] );
 
 		this[ CACHE ] = Catcher[ CACHE ];
 
 		try{
 			this.merge( Catcher[ EVENT ] );
 
-			push.bind( this )( callback );
+			if( protype( callback, FUNCTION ) ){
+				push.bind( this )( callback );
+			}
 
-			flow.apply( this, parameter );
+			if( truly( method ) && !execd( method ) ){
+				flow.apply( this, parameter );
+			}
 
 			this.on( "pass:catcher", function pass( ){
 				self.pass.apply( self, raze( arguments ) );
@@ -463,6 +517,32 @@ const catcher = function catcher( method ){
 		}
 	};
 
+	Catcher.prototype.push = function push( callback ){
+		/*;
+			@meta-configuration:
+				{
+					"callback": "function"
+				}
+			@end-meta-configuration
+		*/
+
+		if( !kein( CALLBACK, this ) ){
+			throw new Error( "catcher has been released, cannot push callback" );
+		}
+
+		if( filled( this[ CALLBACK ] ) ){
+			throw new Error( "push callback once, cannot push callback again" );
+		}
+
+		if( falzy( callback ) || !protype( callback, FUNCTION ) ){
+			throw new Error( "invalid callback" );
+		}
+
+		push.bind( this )( callback );
+
+		return this;
+	};
+
 	Catcher.prototype.then = function then( callback ){
 		/*;
 			@meta-configuration:
@@ -471,6 +551,18 @@ const catcher = function catcher( method ){
 				}
 			@end-meta-configuration
 		*/
+
+		if( !kein( CALLBACK, this ) ){
+			throw new Error( "catcher has been released, cannot push callback" );
+		}
+
+		if( falzy( method ) ){
+			throw new Error( "empty later method, cannot follow with callback" );
+		}
+
+		if( execd( method ) ){
+			throw new Error( "later method executed, cannot follow with callback" );
+		}
 
 		if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 			throw new Error( "invalid callback" );
@@ -490,7 +582,21 @@ const catcher = function catcher( method ){
 			@end-meta-configuration
 		*/
 
-		next.apply( this, raze( arguments ) );
+		parameter = raze( arguments );
+
+		/*;
+			@note:
+				Flow the method if not yet called.
+
+				It is the developer responsibility to push a callback
+					before passing flow.
+			@end-note
+		*/
+		if( truly( method ) && !execd( method ) ){
+			return flow.apply( this, parameter );
+		}
+
+		next.apply( this, parameter );
 
 		return this;
 	};
