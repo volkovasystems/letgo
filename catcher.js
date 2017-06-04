@@ -52,6 +52,7 @@
 			"arid": "arid",
 			"asea": "asea",
 			"backd": "backd",
+			"burne": "burne",
 			"called": "called",
 			"diatom": "diatom",
 			"edo": "edo",
@@ -60,6 +61,7 @@
 			"filled": "filled",
 			"heredito": "heredito",
 			"kein": "kein",
+			"mrkd": "mrkd",
 			"protype": "protype",
 			"raze": "raze",
 			"shft": "shft",
@@ -76,6 +78,7 @@
 const arid = require( "arid" );
 const asea = require( "asea" );
 const backd = require( "backd" );
+const burne = require( "burne" );
 const called = require( "called" );
 const diatom = require( "diatom" );
 const edo = require( "edo" );
@@ -84,6 +87,7 @@ const falzy = require( "falzy" );
 const filled = require( "filled" );
 const heredito = require( "heredito" );
 const kein = require( "kein" );
+const mrkd = require( "mrkd" );
 const protype = require( "protype" );
 const raze = require( "raze" );
 const shft = require( "shft" );
@@ -135,6 +139,10 @@ const catcher = function catcher( method ){
 		.attach( CACHE, { } )
 		.attach( CALLBACK, [ ] )
 		.implement( "done", function done( ){
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return true;
+			}
+
 			if( !kein( INSTANCE, this ) ){
 				return false;
 			}
@@ -142,6 +150,10 @@ const catcher = function catcher( method ){
 			return this[ INSTANCE ].done( );
 		} )
 		.implement( "release", function release( ){
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
 			if( !kein( INSTANCE, this ) ){
 				throw new Error( "cannot release inactive catcher" );
 			}
@@ -156,6 +168,10 @@ const catcher = function catcher( method ){
 					}
 				@end-meta-configuration
 			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
 
 			if( !kein( INSTANCE, this ) ){
 				throw new Error( "cannot record result on inactive catcher" );
@@ -172,6 +188,10 @@ const catcher = function catcher( method ){
 				@end-meta-configuration
 			*/
 
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
 			parameter = raze( arguments );
 
 			if( kein( INSTANCE, this ) ){
@@ -183,12 +203,18 @@ const catcher = function catcher( method ){
 			return this;
 		} )
 		.implement( "stop", function stop( ){
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
 			if( kein( INSTANCE, this ) ){
 				this.release( );
 			}
 
 			this.emit( "release" );
 			this.flush( );
+
+			burne( STOPPED, Catcher );
 
 			return this;
 		} )
@@ -205,6 +231,10 @@ const catcher = function catcher( method ){
 					}
 				@end-meta-configuration
 			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
 
 			if( falzy( property ) || !protype( property, NUMBER + STRING + SYMBOL ) ){
 				throw new Error( "invalid property" );
@@ -242,6 +272,10 @@ const catcher = function catcher( method ){
 				@end-meta-configuration
 			*/
 
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
 			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 				throw new Error( "invalid callback" );
 			}
@@ -258,6 +292,10 @@ const catcher = function catcher( method ){
 					}
 				@end-meta-configuration
 			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
 
 			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 				throw new Error( "invalid callback" );
@@ -279,6 +317,10 @@ const catcher = function catcher( method ){
 					}
 				@end-meta-configuration
 			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
 
 			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 				throw new Error( "invalid callback" );
@@ -471,6 +513,10 @@ const catcher = function catcher( method ){
 			@end-meta-configuration
 		*/
 
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
+
 		parameter = shft( arguments );
 
 		let self = Catcher[ INSTANCE ] = this;
@@ -509,6 +555,10 @@ const catcher = function catcher( method ){
 	};
 
 	Catcher.prototype.done = function done( ){
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return true;
+		}
+
 		if( truly( method ) ){
 			return arid( this[ CALLBACK ] ) && execd( method );
 
@@ -525,6 +575,10 @@ const catcher = function catcher( method ){
 				}
 			@end-meta-configuration
 		*/
+
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
 
 		if( !kein( CALLBACK, this ) ){
 			throw new Error( "catcher has been released, cannot push callback" );
@@ -551,6 +605,10 @@ const catcher = function catcher( method ){
 				}
 			@end-meta-configuration
 		*/
+
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
 
 		if( !kein( CALLBACK, this ) ){
 			throw new Error( "catcher has been released, cannot push callback" );
@@ -582,6 +640,10 @@ const catcher = function catcher( method ){
 			@end-meta-configuration
 		*/
 
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
+
 		parameter = raze( arguments );
 
 		/*;
@@ -610,6 +672,10 @@ const catcher = function catcher( method ){
 				}
 			@end-meta-configuration
 		*/
+
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
 
 		if( kein( DEFER, this ) ){
 			return this;
@@ -646,12 +712,20 @@ const catcher = function catcher( method ){
 			@end-meta-configuration
 		*/
 
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
+
 		this[ RESULT ] = result;
 
 		return this;
 	};
 
 	Catcher.prototype.release = function release( ){
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
+
 		flush.bind( this )( );
 
 		delete this[ CALLBACK ];
@@ -664,9 +738,15 @@ const catcher = function catcher( method ){
 	};
 
 	Catcher.prototype.stop = function stop( ){
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
+
 		this.release( );
 
 		this.emit( "release" );
+
+		burne( STOPPED, Catcher );
 
 		return this;
 	};
@@ -688,6 +768,10 @@ const catcher = function catcher( method ){
 				}
 			@end-meta-configuration
 		*/
+
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
 
 		if( falzy( property ) || !protype( property, NUMBER + STRING + SYMBOL ) ){
 			throw new Error( "invalid property" );
@@ -726,6 +810,10 @@ const catcher = function catcher( method ){
 				}
 			@end-meta-configuration
 		*/
+
+		if( mrkd( STOPPED, Catcher, true ) ){
+			return this;
+		}
 
 		if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 			throw new Error( "invalid callback" );

@@ -3,6 +3,7 @@ babel-runtime \
 arid \
 asea \
 backd \
+burne \
 called \
 diatom \
 edo \
@@ -11,6 +12,7 @@ falzy \
 filled \
 heredito \
 kein \
+mrkd \
 protype \
 raze \
 shft \
@@ -41,6 +43,7 @@ bower install \
 arid \
 asea \
 backd \
+burne \
 called \
 diatom \
 edo \
@@ -49,6 +52,7 @@ falzy \
 filled \
 heredito \
 kein \
+mrkd \
 protype \
 raze \
 shft \
