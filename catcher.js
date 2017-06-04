@@ -35,6 +35,9 @@
 			"module": "letgo",
 			"author": "Richeve S. Bebedor",
 			"eMail": "richeve.bebedor@gmail.com",
+			"contributors": [
+				"John Lenon Maghanoy <johnlenonmaghanoy@gmail.com>"
+			],
 			"repository": "https://github.com/volkovasystems/letgo.git",
 			"test": "letgo-test.js",
 			"global": false
