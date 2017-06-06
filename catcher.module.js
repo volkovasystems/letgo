@@ -550,7 +550,7 @@ const catcher = function catcher( method ){
 			return this;
 
 		}catch( error ){
-			next.bind( this )( new Error( `failed catcher, ${ parameter }, ${ error.stack }` ) );
+			next.bind( this )( new Error( `failed catcher, ${ error.stack }` ) );
 
 		}finally{
 			delete this.initialize;
