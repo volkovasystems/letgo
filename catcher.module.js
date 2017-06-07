@@ -457,7 +457,7 @@ const catcher = function catcher( method ){
 				@end-note
 			*/
 			if( arid( arguments ) ){
-				result = callback.call( context );
+				result = callback.call( context, error, result );
 
 				flush.bind( this )( );
 
