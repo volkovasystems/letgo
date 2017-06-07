@@ -752,6 +752,7 @@ const catcher = function catcher( method ){
 		this.release( );
 
 		this.emit( "release" );
+		Catcher.flush( );
 
 		burne( STOPPED, Catcher );
 

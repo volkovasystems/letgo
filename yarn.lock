@@ -149,6 +149,14 @@ arid@^0.25.0:
     babel-runtime "^6.23.0"
     doubt "^0.26.0"
 
+arid@^0.26.0:
+  version "0.26.0"
+  resolved "https://registry.yarnpkg.com/arid/-/arid-0.26.0.tgz#18438c15a7f769c21cbc490812f86b9654077409"
+  dependencies:
+    arkount "^0.8.0"
+    babel-runtime "^6.23.0"
+    doubt "^0.27.0"
+
 arkount@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/arkount/-/arkount-0.7.0.tgz#781b3053521c58ffc7346b84ff89926e8d77b5b6"
@@ -158,6 +166,16 @@ arkount@^0.7.0:
     raze "^0.29.0"
     truly "^0.18.0"
     wichevr "^0.9.0"
+
+arkount@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/arkount/-/arkount-0.8.0.tgz#3bac6e42792aaea86fc65276f44fdb2d848dddbd"
+  dependencies:
+    babel-runtime "^6.23.0"
+    doubt "^0.27.0"
+    raze "^0.30.0"
+    truly "^0.19.0"
+    wichevr "^0.10.0"
 
 arr-diff@^2.0.0:
   version "2.0.0"
@@ -1578,25 +1596,25 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edo@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/edo/-/edo-0.8.0.tgz#3d8875dec8ff177a163010174a2c8f5173ac43c3"
+edo@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/edo/-/edo-0.9.0.tgz#ff8bfe40aded467c506368294eb9e616865dcb99"
   dependencies:
-    arid "^0.25.0"
-    arkount "^0.7.0"
-    asea "^0.13.0"
+    arid "^0.26.0"
+    arkount "^0.8.0"
+    asea "^0.14.0"
     babel-runtime "^6.23.0"
     called "^0.28.0"
     clazof "^0.27.0"
     diatom "^0.29.0"
     eqe "^0.2.0"
     execd "^0.2.0"
-    exorcise "^0.19.0"
-    falzy "^0.19.0"
+    exorcise "^0.20.0"
+    falzy "^0.20.0"
     ferge "^0.2.0"
-    filled "^0.21.0"
-    harden "^0.21.0"
-    heredito "^0.33.0"
+    filled "^0.22.0"
+    harden "^0.22.0"
+    heredito "^0.34.0"
     idntfy "^0.0.0"
     infray "^0.0.0"
     kein "^0.25.0"
@@ -1604,15 +1622,15 @@ edo@^0.8.0:
     leveld "^0.4.0"
     plough "^0.25.0"
     posp "^0.6.0"
-    protype "^0.21.0"
+    protype "^0.22.0"
     pyck "^0.32.0"
-    raze "^0.29.0"
+    raze "^0.30.0"
     shft "^0.1.0"
     statis "^0.13.0"
     symbiote "^0.20.0"
     valu "^0.0.0"
-    wichevr "^0.9.0"
-    zelf "^0.11.0"
+    wichevr "^0.10.0"
+    zelf "^0.12.0"
 
 een@^0.18.0:
   version "0.18.0"
@@ -1760,14 +1778,14 @@ exempt@^0.12.0:
     nsrt "^0.8.0"
     shft "^0.1.0"
 
-exorcise@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/exorcise/-/exorcise-0.19.0.tgz#cb6cd69fd52ea212a48731e178099faa01451313"
+exorcise@^0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/exorcise/-/exorcise-0.20.0.tgz#3fbd7e89d59bbeb479dff50909fc4e7a930b019c"
   dependencies:
     called "^0.28.0"
-    falzy "^0.19.0"
-    protype "^0.21.0"
-    zelf "^0.11.0"
+    falzy "^0.20.0"
+    protype "^0.22.0"
+    zelf "^0.12.0"
 
 expand-brackets@^0.1.4:
   version "0.1.5"
@@ -1869,6 +1887,14 @@ filled@^0.21.0:
     arkount "^0.7.0"
     babel-runtime "^6.23.0"
     doubt "^0.26.0"
+
+filled@^0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/filled/-/filled-0.22.0.tgz#32df89e97ecf5b1544d2794832115936339f40ae"
+  dependencies:
+    arkount "^0.8.0"
+    babel-runtime "^6.23.0"
+    doubt "^0.27.0"
 
 find-index@^0.1.1:
   version "0.1.1"
@@ -2351,37 +2377,6 @@ hawk@~3.1.3:
     cryptiles "2.x.x"
     hoek "2.x.x"
     sntp "1.x.x"
-
-heredito@^0.33.0:
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/heredito/-/heredito-0.33.0.tgz#848761a8674870cce47a0859494f46d8ff268a13"
-  dependencies:
-    apiqe "^0.1.0"
-    babel-runtime "^6.23.0"
-    clazof "^0.27.0"
-    diatom "^0.29.0"
-    dictate "^0.19.0"
-    een "^0.18.0"
-    erode "^0.0.0"
-    falzy "^0.19.0"
-    firs "^0.0.0"
-    harden "^0.21.0"
-    kein "^0.25.0"
-    leveld "^0.4.0"
-    metod "^0.9.0"
-    meton "^0.1.0"
-    ngrave "^0.2.0"
-    ntrprt "^0.0.0"
-    protype "^0.21.0"
-    rder "^0.1.0"
-    reclas "^0.12.0"
-    sepby "^0.5.0"
-    shft "^0.1.0"
-    statis "^0.13.0"
-    transpher "^0.26.0"
-    truly "^0.18.0"
-    wauker "^0.14.0"
-    x10cv "^0.7.0"
 
 heredito@^0.34.0:
   version "0.34.0"
@@ -4819,6 +4814,14 @@ which@^1.2.12:
   resolved "https://registry.yarnpkg.com/which/-/which-1.2.14.tgz#9a87c4378f03e827cecaf1acdf56c736c01c14e5"
   dependencies:
     isexe "^2.0.0"
+
+wichevr@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/wichevr/-/wichevr-0.10.0.tgz#7fafae8f62f363de4c86ac3dc9e4a5840d635e76"
+  dependencies:
+    babel-runtime "^6.23.0"
+    raze "^0.30.0"
+    truly "^0.19.0"
 
 wichevr@^0.9.0:
   version "0.9.0"
