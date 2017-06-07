@@ -130,6 +130,10 @@ const catcher = function catcher( method ){
 
 	let Catcher = diatom( "Catcher" );
 
+	Catcher = heredito( Catcher, edo.bind( context )( ) );
+
+	Catcher = symbiote( Catcher, "Event" );
+
 	/*;
 		@note:
 			We should create an instance of the Event here.
@@ -834,10 +838,6 @@ const catcher = function catcher( method ){
 	Catcher.prototype.toString = function toString( ){
 		return stringe( this.result( ) );
 	};
-
-	Catcher = heredito( Catcher, edo.bind( context )( ) );
-
-	Catcher = symbiote( Catcher, "Event" );
 
 	return Catcher;
 };
