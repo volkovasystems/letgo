@@ -304,6 +304,14 @@ const catcher = function catcher( method ){
 				return this;
 			}
 
+			if( filled( this[ CALLBACK ] ) ){
+				throw new Error( "push callback once, cannot push callback again" );
+			}
+
+			if( truly( method ) && execd( method ) ){
+				throw new Error( "later method executed, cannot follow with callback" );
+			}
+
 			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 				throw new Error( "invalid callback" );
 			}
@@ -329,6 +337,14 @@ const catcher = function catcher( method ){
 				return this;
 			}
 
+			if( falzy( method ) && arid( this[ CALLBACK ] ) ){
+				throw new Error( "empty later method, cannot follow with callback" );
+			}
+
+			if( truly( method ) && execd( method ) ){
+				throw new Error( "later method executed, cannot follow with callback" );
+			}
+
 			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 				throw new Error( "invalid callback" );
 			}
@@ -338,6 +354,49 @@ const catcher = function catcher( method ){
 			}
 
 			this[ CALLBACK ].push( backd.bind( context )( callback ) );
+
+			return this;
+		} )
+		.implement( "defer", function defer( handler, strict ){
+			/*;
+				@meta-configuration:
+					{
+						"handler:required": "function",
+						"strict": "boolean"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+				throw new Error( "invalid defer handler" );
+			}
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].then( handler, strict );
+			}
+
+			if( kein( DEFER, this ) ){
+				return this;
+			}
+
+			if( strict === true ){
+				let self = this;
+
+				this[ DEFER ] = called.bind( context )( function delegate( error ){
+					handler.call( this, error );
+
+					flush.bind( self )( );
+
+					return this;
+				} );
+
+			}else{
+				this[ DEFER ] = called.bind( context )( handler );
+			}
 
 			return this;
 		} )
@@ -543,6 +602,10 @@ const catcher = function catcher( method ){
 				flow.apply( this, parameter );
 			}
 
+			if( kein( DEFER, Catcher ) ){
+				this.defer( Catcher[ DEFER ] );
+			}
+
 			this.on( "pass:catcher", function pass( ){
 				self.pass.apply( self, raze( arguments ) );
 			} );
@@ -595,6 +658,10 @@ const catcher = function catcher( method ){
 			throw new Error( "push callback once, cannot push callback again" );
 		}
 
+		if( truly( method ) && execd( method ) ){
+			throw new Error( "later method executed, cannot push callback" );
+		}
+
 		if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 			throw new Error( "invalid callback" );
 		}
@@ -621,11 +688,11 @@ const catcher = function catcher( method ){
 			throw new Error( "catcher has been released, cannot push callback" );
 		}
 
-		if( falzy( method ) ){
+		if( falzy( method ) && arid( this[ CALLBACK ] ) ){
 			throw new Error( "empty later method, cannot follow with callback" );
 		}
 
-		if( execd( method ) ){
+		if( truly( method ) && execd( method ) ){
 			throw new Error( "later method executed, cannot follow with callback" );
 		}
 
