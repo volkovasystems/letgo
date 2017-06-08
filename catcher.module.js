@@ -106,6 +106,7 @@ const CALLBACK = Symbol( "callback" );
 const DEFER = Symbol( "defer" );
 const EVENT = Symbol( "event" );
 const INSTANCE = Symbol( "instance" );
+const PAUSED = Symbol( "paused" );
 const RESULT = Symbol( "result" );
 const STOPPED = Symbol( "stopped" );
 
@@ -400,6 +401,24 @@ const catcher = function catcher( method ){
 
 			return this;
 		} )
+		.implement( "pause", function pause( ){
+			this[ PAUSED ] = true;
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].pause( );
+			}
+
+			return this;
+		} )
+		.implement( "unpause", function pause( ){
+			this[ PAUSED ] = false;
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].unpause( );
+			}
+
+			return this;
+		} )
 		.merge( event );
 
 	/*;
@@ -491,9 +510,12 @@ const catcher = function catcher( method ){
 
 				If the callback encounters an error, it is up for the next callback
 					to continue the chain or halts the chain.
+
+				Automatic call of the next callback if the result is a catcher,
+					if the callbacks are not empty and the catcher is not paused.
 			@end-note
 		*/
-		if( !( result instanceof Catcher ) && filled( this[ CALLBACK ] ) ){
+		if( !( result instanceof Catcher ) && filled( this[ CALLBACK ] ) && !this[ PAUSED ] ){
 			next.apply( this, [ error, result ].concat( parameter ) );
 		}
 
@@ -516,6 +538,13 @@ const catcher = function catcher( method ){
 		if( falzy( method ) ){
 			return this;
 		}
+
+		/*;
+			@note:
+				Possibility that the catcher is paused before flowing.
+			@end-note
+		*/
+		this.unpause( );
 
 		try{
 			if( asea.server ){
@@ -604,6 +633,10 @@ const catcher = function catcher( method ){
 
 			if( kein( DEFER, Catcher ) ){
 				this.defer( Catcher[ DEFER ] );
+			}
+
+			if( kein( PAUSED, Catcher ) ){
+				this[ PAUSED ] = Catcher[ PAUSED ];
 			}
 
 			this.on( "pass:catcher", function pass( ){
@@ -731,6 +764,8 @@ const catcher = function catcher( method ){
 		if( truly( method ) && !execd( method ) ){
 			return flow.apply( this, parameter );
 		}
+
+		this.unpause( );
 
 		next.apply( this, parameter );
 
@@ -895,6 +930,22 @@ const catcher = function catcher( method ){
 		}
 
 		this.once( "lastly", callback );
+
+		return this;
+	};
+
+	Catcher.prototype.pause = function pause( ){
+		this[ PAUSED ] = true;
+
+		Catcher[ PAUSED ] = true;
+
+		return this;
+	};
+
+	Catcher.prototype.unpause = function unpause( ){
+		this[ PAUSED ] = false;
+
+		Catcher[ PAUSED ] = false;
 
 		return this;
 	};
