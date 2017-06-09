@@ -63,6 +63,7 @@
 			"falzy": "falzy",
 			"filled": "filled",
 			"heredito": "heredito",
+			"idntty": "idntty",
 			"kein": "kein",
 			"mrkd": "mrkd",
 			"protype": "protype",
@@ -89,6 +90,7 @@ const execd = require( "execd" );
 const falzy = require( "falzy" );
 const filled = require( "filled" );
 const heredito = require( "heredito" );
+const idntty = require( "idntty" );
 const kein = require( "kein" );
 const mrkd = require( "mrkd" );
 const protype = require( "protype" );
@@ -106,6 +108,7 @@ const CALLBACK = Symbol( "callback" );
 const DEFER = Symbol( "defer" );
 const EVENT = Symbol( "event" );
 const INSTANCE = Symbol( "instance" );
+const PAUSED = Symbol( "paused" );
 const RESULT = Symbol( "result" );
 const STOPPED = Symbol( "stopped" );
 
@@ -205,7 +208,8 @@ const catcher = function catcher( method ){
 				return this[ INSTANCE ].pass.apply( this[ INSTANCE ], parameter );
 			}
 
-			this.emit.apply( context, [ "pass:catcher" ].concat( parameter ) );
+			let identity = idntty( Catcher ).toString( );
+			this.emit.apply( context, [ `${ identity }:pass` ].concat( parameter ) );
 
 			return this;
 		} )
@@ -316,6 +320,8 @@ const catcher = function catcher( method ){
 				throw new Error( "invalid callback" );
 			}
 
+			console.log( "test push" );
+
 			if( kein( INSTANCE, this ) ){
 				return this[ INSTANCE ].push( callback );
 			}
@@ -348,6 +354,8 @@ const catcher = function catcher( method ){
 			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
 				throw new Error( "invalid callback" );
 			}
+
+			console.log( "test then" );
 
 			if( kein( INSTANCE, this ) ){
 				return this[ INSTANCE ].then( callback );
@@ -400,6 +408,87 @@ const catcher = function catcher( method ){
 
 			return this;
 		} )
+		.implement( "pause", function pause( ){
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			this[ PAUSED ] = true;
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].pause( );
+			}
+
+			return this;
+		} )
+		.implement( "unpause", function pause( ){
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			this[ PAUSED ] = false;
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].unpause( );
+			}
+
+			return this;
+		} )
+		.implement( "through", function through( flow, error, result, parameter ){
+			/*;
+				@meta-configuration:
+					{
+						"flow:required": "string",
+						"error:required": [
+							null,
+							Error
+						],
+						"result:required": "*"
+						"parameter": "..."
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			if( falzy( flow ) || !protype( flow, STRING ) ){
+				throw new Error( "invalid flow" );
+			}
+
+			parameter = shft( arguments, 3 );
+
+			this.emit.apply( this, [ `flow:${ flow }`, error, result ].concat( parameter ) );
+
+			return this;
+		} )
+		.implement( "flow", function flow( name, handler ){
+			/*;
+				@meta-configuration:
+					{
+						"name:required": "string",
+						"handler:required": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			if( falzy( name ) || !protype( name, STRING ) ){
+				throw new Error( "invalid flow name" );
+			}
+
+			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+				throw new Error( "invalid flow handler" );
+			}
+
+			this.once( `flow:${ name }`, handler );
+
+			return this;
+		} )
 		.merge( event );
 
 	/*;
@@ -441,7 +530,11 @@ const catcher = function catcher( method ){
 
 		let callback = this[ CALLBACK ].splice( 0, 1 ).pop( );
 
+		console.log( "test here", callback );
+
 		if( falzy( callback ) ){
+			console.log( "emitting lastly" );
+			
 			this.set( "result", result );
 
 			this.emit( "lastly" );
@@ -483,7 +576,9 @@ const catcher = function catcher( method ){
 			result = undefined;
 		}
 
-		this.set( "result", result );
+		if( !( result instanceof Catcher ) ){
+			this.set( "result", result );
+		}
 
 		/*;
 			@note:
@@ -491,9 +586,13 @@ const catcher = function catcher( method ){
 
 				If the callback encounters an error, it is up for the next callback
 					to continue the chain or halts the chain.
+
+				Automatic call of the next callback if the result is a catcher,
+					if the callbacks are not empty and the catcher is not paused.
 			@end-note
 		*/
-		if( !( result instanceof Catcher ) && filled( this[ CALLBACK ] ) ){
+		console.log( !( result instanceof Catcher ), filled( this[ CALLBACK ] ), !this[ PAUSED ] )
+		if( !( result instanceof Catcher ) && filled( this[ CALLBACK ] ) && !this[ PAUSED ] ){
 			next.apply( this, [ error, result ].concat( parameter ) );
 		}
 
@@ -516,6 +615,13 @@ const catcher = function catcher( method ){
 		if( falzy( method ) ){
 			return this;
 		}
+
+		/*;
+			@note:
+				Possibility that the catcher is paused before flowing.
+			@end-note
+		*/
+		this.unpause( );
 
 		try{
 			if( asea.server ){
@@ -589,10 +695,14 @@ const catcher = function catcher( method ){
 
 		this[ CALLBACK ] = wichis( Catcher[ CALLBACK ], [ ] );
 
+		console.log( this[ CALLBACK ] );
+
 		this[ CACHE ] = Catcher[ CACHE ];
 
 		try{
 			this.merge( Catcher[ EVENT ] );
+
+			console.log( callback );
 
 			if( protype( callback, FUNCTION ) ){
 				push.bind( this )( callback );
@@ -606,11 +716,17 @@ const catcher = function catcher( method ){
 				this.defer( Catcher[ DEFER ] );
 			}
 
-			this.on( "pass:catcher", function pass( ){
+			if( kein( PAUSED, Catcher ) ){
+				this[ PAUSED ] = Catcher[ PAUSED ];
+			}
+
+			let identity = idntty( Catcher ).toString( );
+			this.on( `${ identity }:pass`, function pass( ){
 				self.pass.apply( self, raze( arguments ) );
-			} );
+			}, { "disableOnListenerNotification": true } );
 
 			this.lastly( function lastly( ){
+				console.log( "stop" );
 				self.stop( );
 			} );
 
@@ -731,6 +847,8 @@ const catcher = function catcher( method ){
 		if( truly( method ) && !execd( method ) ){
 			return flow.apply( this, parameter );
 		}
+
+		this.unpause( );
 
 		next.apply( this, parameter );
 
@@ -895,6 +1013,79 @@ const catcher = function catcher( method ){
 		}
 
 		this.once( "lastly", callback );
+
+		return this;
+	};
+
+	Catcher.prototype.pause = function pause( ){
+		this[ PAUSED ] = true;
+
+		Catcher[ PAUSED ] = true;
+
+		return this;
+	};
+
+	Catcher.prototype.unpause = function unpause( ){
+		this[ PAUSED ] = false;
+
+		Catcher[ PAUSED ] = false;
+
+		return this;
+	};
+
+	Catcher.prototype.through = function through( flow, error, result, parameter ){
+		/*;
+			@meta-configuration:
+				{
+					"flow:required": "string",
+					"error:required": [
+						null,
+						Error
+					],
+					"result:required": "*"
+					"parameter": "..."
+				}
+			@end-meta-configuration
+		*/
+
+		if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+			return this;
+		}
+
+		if( falzy( flow ) || !protype( flow, STRING ) ){
+			throw new Error( "invalid flow" );
+		}
+
+		parameter = shft( arguments, 3 );
+
+		this.emit.apply( this, [ `flow:${ flow }`, error, result ].concat( parameter ) );
+
+		return this;
+	};
+
+	Catcher.prototype.flow = function flow( name, handler ){
+		/*;
+			@meta-configuration:
+				{
+					"name:required": "string",
+					"handler:required": "function"
+				}
+			@end-meta-configuration
+		*/
+
+		if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+			return this;
+		}
+
+		if( falzy( name ) || !protype( name, STRING ) ){
+			throw new Error( "invalid flow name" );
+		}
+
+		if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+			throw new Error( "invalid flow handler" );
+		}
+
+		this.once( `flow:${ flow }`, handler );
 
 		return this;
 	};

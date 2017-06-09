@@ -63,6 +63,7 @@
 			"falzy": "falzy",
 			"filled": "filled",
 			"heredito": "heredito",
+			"idntty": "idntty",
 			"kein": "kein",
 			"mrkd": "mrkd",
 			"protype": "protype",
@@ -89,6 +90,7 @@ const execd = require( "execd" );
 const falzy = require( "falzy" );
 const filled = require( "filled" );
 const heredito = require( "heredito" );
+const idntty = require( "idntty" );
 const kein = require( "kein" );
 const mrkd = require( "mrkd" );
 const protype = require( "protype" );
@@ -206,7 +208,8 @@ const catcher = function catcher( method ){
 				return this[ INSTANCE ].pass.apply( this[ INSTANCE ], parameter );
 			}
 
-			this.emit.apply( context, [ "pass:catcher" ].concat( parameter ) );
+			let identity = idntty( Catcher ).toString( );
+			this.emit.apply( context, [ `${ identity }:pass` ].concat( parameter ) );
 
 			return this;
 		} )
@@ -402,6 +405,10 @@ const catcher = function catcher( method ){
 			return this;
 		} )
 		.implement( "pause", function pause( ){
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
 			this[ PAUSED ] = true;
 
 			if( kein( INSTANCE, this ) ){
@@ -411,11 +418,70 @@ const catcher = function catcher( method ){
 			return this;
 		} )
 		.implement( "unpause", function pause( ){
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
 			this[ PAUSED ] = false;
 
 			if( kein( INSTANCE, this ) ){
 				return this[ INSTANCE ].unpause( );
 			}
+
+			return this;
+		} )
+		.implement( "through", function through( flow, error, result, parameter ){
+			/*;
+				@meta-configuration:
+					{
+						"flow:required": "string",
+						"error:required": [
+							null,
+							Error
+						],
+						"result:required": "*"
+						"parameter": "..."
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			if( falzy( flow ) || !protype( flow, STRING ) ){
+				throw new Error( "invalid flow" );
+			}
+
+			parameter = shft( arguments, 3 );
+
+			this.emit.apply( this, [ `flow:${ flow }`, error, result ].concat( parameter ) );
+
+			return this;
+		} )
+		.implement( "flow", function flow( name, handler ){
+			/*;
+				@meta-configuration:
+					{
+						"name:required": "string",
+						"handler:required": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			if( falzy( name ) || !protype( name, STRING ) ){
+				throw new Error( "invalid flow name" );
+			}
+
+			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+				throw new Error( "invalid flow handler" );
+			}
+
+			this.once( `flow:${ name }`, handler );
 
 			return this;
 		} )
@@ -502,7 +568,9 @@ const catcher = function catcher( method ){
 			result = undefined;
 		}
 
-		this.set( "result", result );
+		if( !( result instanceof Catcher ) ){
+			this.set( "result", result );
+		}
 
 		/*;
 			@note:
@@ -639,9 +707,10 @@ const catcher = function catcher( method ){
 				this[ PAUSED ] = Catcher[ PAUSED ];
 			}
 
-			this.on( "pass:catcher", function pass( ){
+			let identity = idntty( Catcher ).toString( );
+			this.on( `${ identity }:pass`, function pass( ){
 				self.pass.apply( self, raze( arguments ) );
-			} );
+			}, { "disableOnListenerNotification": true } );
 
 			this.lastly( function lastly( ){
 				self.stop( );
@@ -946,6 +1015,63 @@ const catcher = function catcher( method ){
 		this[ PAUSED ] = false;
 
 		Catcher[ PAUSED ] = false;
+
+		return this;
+	};
+
+	Catcher.prototype.through = function through( flow, error, result, parameter ){
+		/*;
+			@meta-configuration:
+				{
+					"flow:required": "string",
+					"error:required": [
+						null,
+						Error
+					],
+					"result:required": "*"
+					"parameter": "..."
+				}
+			@end-meta-configuration
+		*/
+
+		if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+			return this;
+		}
+
+		if( falzy( flow ) || !protype( flow, STRING ) ){
+			throw new Error( "invalid flow" );
+		}
+
+		parameter = shft( arguments, 3 );
+
+		this.emit.apply( this, [ `flow:${ flow }`, error, result ].concat( parameter ) );
+
+		return this;
+	};
+
+	Catcher.prototype.flow = function flow( name, handler ){
+		/*;
+			@meta-configuration:
+				{
+					"name:required": "string",
+					"handler:required": "function"
+				}
+			@end-meta-configuration
+		*/
+
+		if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+			return this;
+		}
+
+		if( falzy( name ) || !protype( name, STRING ) ){
+			throw new Error( "invalid flow name" );
+		}
+
+		if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+			throw new Error( "invalid flow handler" );
+		}
+
+		this.once( `flow:${ flow }`, handler );
 
 		return this;
 	};

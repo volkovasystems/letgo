@@ -81,11 +81,11 @@ catcher.then( function callback2( error, result, value ){
 	console.log( "ok" );
 } );
 
-let catcherTest = letgo.bind( { "hello": "world" } )( );
-catcherTest = catcherTest( function hello( ){
-	assert.deepEqual( Array.from( arguments ), [ null, "hello", 1, 2, 3 ], "should be deeply equal" );
-
-	console.log( "ok" );
-} );
-
-catcherTest.pass( null, "hello", 1, 2, 3 );
+// let catcherTest = letgo.bind( { "hello": "world" } )( );
+// catcherTest = catcherTest( function hello( ){
+// 	assert.deepEqual( Array.from( arguments ), [ null, "hello", 1, 2, 3 ], "should be deeply equal" );
+//
+// 	console.log( "ok" );
+// } );
+//
+// catcherTest.pass( null, "hello", 1, 2, 3 );
