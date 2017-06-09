@@ -81,11 +81,39 @@ catcher.then( function callback2( error, result, value ){
 	console.log( "ok" );
 } );
 
-// let catcherTest = letgo.bind( { "hello": "world" } )( );
-// catcherTest = catcherTest( function hello( ){
-// 	assert.deepEqual( Array.from( arguments ), [ null, "hello", 1, 2, 3 ], "should be deeply equal" );
-//
-// 	console.log( "ok" );
-// } );
-//
-// catcherTest.pass( null, "hello", 1, 2, 3 );
+let catcherTest = letgo.bind( { "hello": "world" } )( );
+catcherTest = catcherTest( function hello( ){
+	assert.deepEqual( Array.from( arguments ), [ null, "hello", 1, 2, 3 ], "should be deeply equal" );
+
+	console.log( "ok" );
+} );
+
+catcherTest.pass( null, "hello", 1, 2, 3 );
+
+let test = letgo.bind( { "hello": "world" } )( function later( callback ){
+	return callback( null, "hello", 123 )
+} ).push( function testA( error, result, value ){
+	console.log( "testA", arguments );
+
+	return test.through( "testE", null, 123, 456 );
+} ).then( function testB( error, result, value ){
+	console.log( "testB", arguments );
+
+	return test.through( "testD", null, "world", 789 );
+} ).then( function testC( error, result, value ){
+	console.log( "testC", arguments );
+
+	return test.pass( null, "final", 1234567890 );
+} ).flow( "testD", function testD( error, result, value ){
+	console.log( "testD", arguments );
+
+	return test.pass( null, "nice", 456 );
+} ).flow( "testE", function testE( error, result, value ){
+	console.log( "testE", arguments );
+
+	return test.pass( null, "yehey", 456 );
+} );
+
+test( function hello( error, result, value ){
+	console.log( "hello", arguments );
+} );

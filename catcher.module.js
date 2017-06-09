@@ -131,362 +131,6 @@ const catcher = function catcher( method ){
 		method = called.bind( context )( method );
 	}
 
-	let Catcher = diatom( "Catcher" );
-
-	Catcher = heredito( Catcher, edo.bind( context )( ) );
-
-	Catcher = symbiote( Catcher, "Event" );
-
-	/*;
-		@note:
-			We should create an instance of the Event here.
-		@end-note
-	*/
-	let event = edo.bind( context )( )( );
-
-	statis( Catcher )
-		.attach( EVENT, event )
-		.attach( CACHE, { } )
-		.attach( CALLBACK, [ ] )
-		.implement( "done", function done( ){
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return true;
-			}
-
-			if( !kein( INSTANCE, this ) ){
-				return false;
-			}
-
-			return this[ INSTANCE ].done( );
-		} )
-		.implement( "release", function release( ){
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( !kein( INSTANCE, this ) ){
-				throw new Error( "cannot release inactive catcher" );
-			}
-
-			return this[ INSTANCE ].release( );
-		} )
-		.implement( "record", function record( result ){
-			/*;
-				@meta-configuration:
-					{
-						"result:required": "*"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( !kein( INSTANCE, this ) ){
-				throw new Error( "cannot record result on inactive catcher" );
-			}
-
-			return this[ INSTANCE ].record( result );
-		} )
-		.implement( "pass", function pass( parameter ){
-			/*;
-				@meta-configuration:
-					{
-						"parameter:required": "..."
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			parameter = raze( arguments );
-
-			if( kein( INSTANCE, this ) ){
-				return this[ INSTANCE ].pass.apply( this[ INSTANCE ], parameter );
-			}
-
-			let identity = idntty( Catcher ).toString( );
-			this.emit.apply( context, [ `${ identity }:pass` ].concat( parameter ) );
-
-			return this;
-		} )
-		.implement( "stop", function stop( ){
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( kein( INSTANCE, this ) ){
-				this.release( );
-			}
-
-			this.emit( "release" );
-			this.flush( );
-
-			burne( STOPPED, Catcher );
-
-			return this;
-		} )
-		.implement( "set", function set( property, value ){
-			/*;
-				@meta-configuration:
-					{
-						"property:required": [
-							"number",
-							"string",
-							"symbol"
-						],
-						"value": "*"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( falzy( property ) || !protype( property, NUMBER + STRING + SYMBOL ) ){
-				throw new Error( "invalid property" );
-			}
-
-			this[ CACHE ][ property ] = value;
-
-			return this;
-		} )
-		.implement( "get", function get( property ){
-			/*;
-				@meta-configuration:
-					{
-						"property:required": [
-							"number",
-							"string",
-							"symbol"
-						]
-					}
-				@end-meta-configuration
-			*/
-
-			if( falzy( property ) || !protype( property, NUMBER + STRING + SYMBOL ) ){
-				throw new Error( "invalid property" );
-			}
-
-			return this[ CACHE ][ property ];
-		} )
-		.implement( "lastly", function lastly( callback ){
-			/*;
-				@meta-configuration:
-					{
-						"callback:required": "function"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
-				throw new Error( "invalid callback" );
-			}
-
-			this.once( "lastly", callback );
-
-			return this;
-		} )
-		.implement( "push", function push( callback ){
-			/*;
-				@meta-configuration:
-					{
-						"callback": "function"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( filled( this[ CALLBACK ] ) ){
-				throw new Error( "push callback once, cannot push callback again" );
-			}
-
-			if( truly( method ) && execd( method ) ){
-				throw new Error( "later method executed, cannot follow with callback" );
-			}
-
-			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
-				throw new Error( "invalid callback" );
-			}
-
-			if( kein( INSTANCE, this ) ){
-				return this[ INSTANCE ].push( callback );
-			}
-
-			this[ CALLBACK ].push( backd.bind( context )( callback ) );
-
-			return this;
-		} )
-		.implement( "then", function then( callback ){
-			/*;
-				@meta-configuration:
-					{
-						"callback": "function"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( falzy( method ) && arid( this[ CALLBACK ] ) ){
-				throw new Error( "empty later method, cannot follow with callback" );
-			}
-
-			if( truly( method ) && execd( method ) ){
-				throw new Error( "later method executed, cannot follow with callback" );
-			}
-
-			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
-				throw new Error( "invalid callback" );
-			}
-
-			if( kein( INSTANCE, this ) ){
-				return this[ INSTANCE ].then( callback );
-			}
-
-			this[ CALLBACK ].push( backd.bind( context )( callback ) );
-
-			return this;
-		} )
-		.implement( "defer", function defer( handler, strict ){
-			/*;
-				@meta-configuration:
-					{
-						"handler:required": "function",
-						"strict": "boolean"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) ){
-				return this;
-			}
-
-			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
-				throw new Error( "invalid defer handler" );
-			}
-
-			if( kein( INSTANCE, this ) ){
-				return this[ INSTANCE ].then( handler, strict );
-			}
-
-			if( kein( DEFER, this ) ){
-				return this;
-			}
-
-			if( strict === true ){
-				let self = this;
-
-				this[ DEFER ] = called.bind( context )( function delegate( error ){
-					handler.call( this, error );
-
-					flush.bind( self )( );
-
-					return this;
-				} );
-
-			}else{
-				this[ DEFER ] = called.bind( context )( handler );
-			}
-
-			return this;
-		} )
-		.implement( "pause", function pause( ){
-			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
-				return this;
-			}
-
-			this[ PAUSED ] = true;
-
-			if( kein( INSTANCE, this ) ){
-				return this[ INSTANCE ].pause( );
-			}
-
-			return this;
-		} )
-		.implement( "unpause", function pause( ){
-			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
-				return this;
-			}
-
-			this[ PAUSED ] = false;
-
-			if( kein( INSTANCE, this ) ){
-				return this[ INSTANCE ].unpause( );
-			}
-
-			return this;
-		} )
-		.implement( "through", function through( flow, error, result, parameter ){
-			/*;
-				@meta-configuration:
-					{
-						"flow:required": "string",
-						"error:required": [
-							null,
-							Error
-						],
-						"result:required": "*"
-						"parameter": "..."
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
-				return this;
-			}
-
-			if( falzy( flow ) || !protype( flow, STRING ) ){
-				throw new Error( "invalid flow" );
-			}
-
-			parameter = shft( arguments, 3 );
-
-			this.emit.apply( this, [ `flow:${ flow }`, error, result ].concat( parameter ) );
-
-			return this;
-		} )
-		.implement( "flow", function flow( name, handler ){
-			/*;
-				@meta-configuration:
-					{
-						"name:required": "string",
-						"handler:required": "function"
-					}
-				@end-meta-configuration
-			*/
-
-			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
-				return this;
-			}
-
-			if( falzy( name ) || !protype( name, STRING ) ){
-				throw new Error( "invalid flow name" );
-			}
-
-			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
-				throw new Error( "invalid flow handler" );
-			}
-
-			this.once( `flow:${ name }`, handler );
-
-			return this;
-		} )
-		.merge( event );
-
 	/*;
 		@note:
 			These methods should not be accessible outside through the catcher.
@@ -665,6 +309,8 @@ const catcher = function catcher( method ){
 
 		return this;
 	};
+
+	let Catcher = diatom( "Catcher" );
 
 	Catcher.prototype.initialize = function initialize( callback, parameter ){
 		/*;
@@ -1083,6 +729,360 @@ const catcher = function catcher( method ){
 	Catcher.prototype.toString = function toString( ){
 		return stringe( this.result( ) );
 	};
+
+	Catcher = heredito( Catcher, edo.bind( context )( ) );
+
+	Catcher = symbiote( Catcher, "Event" );
+
+	/*;
+		@note:
+			We should create an instance of the Event here.
+		@end-note
+	*/
+	let event = edo.bind( context )( )( );
+
+	statis( Catcher )
+		.attach( EVENT, event )
+		.attach( CACHE, { } )
+		.attach( CALLBACK, [ ] )
+		.implement( "done", function done( ){
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return true;
+			}
+
+			if( !kein( INSTANCE, this ) ){
+				return false;
+			}
+
+			return this[ INSTANCE ].done( );
+		} )
+		.implement( "release", function release( ){
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( !kein( INSTANCE, this ) ){
+				throw new Error( "cannot release inactive catcher" );
+			}
+
+			return this[ INSTANCE ].release( );
+		} )
+		.implement( "record", function record( result ){
+			/*;
+				@meta-configuration:
+					{
+						"result:required": "*"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( !kein( INSTANCE, this ) ){
+				throw new Error( "cannot record result on inactive catcher" );
+			}
+
+			return this[ INSTANCE ].record( result );
+		} )
+		.implement( "pass", function pass( parameter ){
+			/*;
+				@meta-configuration:
+					{
+						"parameter:required": "..."
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			parameter = raze( arguments );
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].pass.apply( this[ INSTANCE ], parameter );
+			}
+
+			let identity = idntty( Catcher ).toString( );
+			this.emit.apply( context, [ `${ identity }:pass` ].concat( parameter ) );
+
+			return this;
+		} )
+		.implement( "stop", function stop( ){
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( kein( INSTANCE, this ) ){
+				this.release( );
+			}
+
+			this.emit( "release" );
+			this.flush( );
+
+			burne( STOPPED, Catcher );
+
+			return this;
+		} )
+		.implement( "set", function set( property, value ){
+			/*;
+				@meta-configuration:
+					{
+						"property:required": [
+							"number",
+							"string",
+							"symbol"
+						],
+						"value": "*"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( falzy( property ) || !protype( property, NUMBER + STRING + SYMBOL ) ){
+				throw new Error( "invalid property" );
+			}
+
+			this[ CACHE ][ property ] = value;
+
+			return this;
+		} )
+		.implement( "get", function get( property ){
+			/*;
+				@meta-configuration:
+					{
+						"property:required": [
+							"number",
+							"string",
+							"symbol"
+						]
+					}
+				@end-meta-configuration
+			*/
+
+			if( falzy( property ) || !protype( property, NUMBER + STRING + SYMBOL ) ){
+				throw new Error( "invalid property" );
+			}
+
+			return this[ CACHE ][ property ];
+		} )
+		.implement( "lastly", function lastly( callback ){
+			/*;
+				@meta-configuration:
+					{
+						"callback:required": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
+				throw new Error( "invalid callback" );
+			}
+
+			this.once( "lastly", callback );
+
+			return this;
+		} )
+		.implement( "push", function push( callback ){
+			/*;
+				@meta-configuration:
+					{
+						"callback": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( filled( this[ CALLBACK ] ) ){
+				throw new Error( "push callback once, cannot push callback again" );
+			}
+
+			if( truly( method ) && execd( method ) ){
+				throw new Error( "later method executed, cannot follow with callback" );
+			}
+
+			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
+				throw new Error( "invalid callback" );
+			}
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].push( callback );
+			}
+
+			this[ CALLBACK ].push( backd.bind( context )( callback ) );
+
+			return this;
+		} )
+		.implement( "then", function then( callback ){
+			/*;
+				@meta-configuration:
+					{
+						"callback": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( falzy( method ) && arid( this[ CALLBACK ] ) ){
+				throw new Error( "empty later method, cannot follow with callback" );
+			}
+
+			if( truly( method ) && execd( method ) ){
+				throw new Error( "later method executed, cannot follow with callback" );
+			}
+
+			if( falzy( callback ) || !protype( callback, FUNCTION ) ){
+				throw new Error( "invalid callback" );
+			}
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].then( callback );
+			}
+
+			this[ CALLBACK ].push( backd.bind( context )( callback ) );
+
+			return this;
+		} )
+		.implement( "defer", function defer( handler, strict ){
+			/*;
+				@meta-configuration:
+					{
+						"handler:required": "function",
+						"strict": "boolean"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) ){
+				return this;
+			}
+
+			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+				throw new Error( "invalid defer handler" );
+			}
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].then( handler, strict );
+			}
+
+			if( kein( DEFER, this ) ){
+				return this;
+			}
+
+			if( strict === true ){
+				let self = this;
+
+				this[ DEFER ] = called.bind( context )( function delegate( error ){
+					handler.call( this, error );
+
+					flush.bind( self )( );
+
+					return this;
+				} );
+
+			}else{
+				this[ DEFER ] = called.bind( context )( handler );
+			}
+
+			return this;
+		} )
+		.implement( "pause", function pause( ){
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			this[ PAUSED ] = true;
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].pause( );
+			}
+
+			return this;
+		} )
+		.implement( "unpause", function pause( ){
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			this[ PAUSED ] = false;
+
+			if( kein( INSTANCE, this ) ){
+				return this[ INSTANCE ].unpause( );
+			}
+
+			return this;
+		} )
+		.implement( "through", function through( flow, error, result, parameter ){
+			/*;
+				@meta-configuration:
+					{
+						"flow:required": "string",
+						"error:required": [
+							null,
+							Error
+						],
+						"result:required": "*"
+						"parameter": "..."
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			if( falzy( flow ) || !protype( flow, STRING ) ){
+				throw new Error( "invalid flow" );
+			}
+
+			parameter = shft( arguments, 3 );
+
+			this.emit.apply( this, [ `flow:${ flow }`, error, result ].concat( parameter ) );
+
+			return this;
+		} )
+		.implement( "flow", function flow( name, handler ){
+			/*;
+				@meta-configuration:
+					{
+						"name:required": "string",
+						"handler:required": "function"
+					}
+				@end-meta-configuration
+			*/
+
+			if( mrkd( STOPPED, Catcher, true ) || arid( this[ CALLBACK ] ) ){
+				return this;
+			}
+
+			if( falzy( name ) || !protype( name, STRING ) ){
+				throw new Error( "invalid flow name" );
+			}
+
+			if( falzy( handler ) || !protype( handler, FUNCTION ) ){
+				throw new Error( "invalid flow handler" );
+			}
+
+			this.once( `flow:${ name }`, handler );
+
+			return this;
+		} )
+		.merge( event );
 
 	return Catcher;
 };
