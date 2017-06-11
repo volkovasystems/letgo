@@ -38,7 +38,7 @@
     "burne": "^0.2.0",
     "called": "^0.28.0",
     "diatom": "^0.29.0",
-    "edo": "^0.10.0",
+    "edo": "^0.11.0",
     "execd": "^0.2.0",
     "falzy": "^0.20.0",
     "filled": "^0.22.0",
@@ -53,7 +53,6 @@
     "stringe": "^0.4.0",
     "symbiote": "^0.20.0",
     "truly": "^0.19.0",
-    "wichis": "^0.14.0",
     "zelf": "^0.12.0"
   },
   "devDependencies": {
@@ -61,7 +60,7 @@
     "babel-core": "^6.25.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-latest": "^6.24.1",
-    "del": "^2.2.2",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-debug": "^3.1.0",

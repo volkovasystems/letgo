@@ -21,7 +21,6 @@ statis \
 stringe \
 symbiote \
 truly \
-wichis \
 zelf \
 --save && \
 yarn add \
@@ -62,7 +61,6 @@ statis \
 stringe \
 symbiote \
 truly \
-wichis \
 zelf \
 --save \
 --force-latest

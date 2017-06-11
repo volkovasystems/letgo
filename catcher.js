@@ -73,7 +73,6 @@
 			"stringe": "stringe",
 			"symbiote": "symbiote",
 			"truly": "truly",
-			"wichis": "wichis",
 			"zelf": "zelf"
 		}
 	@end-include
@@ -100,7 +99,6 @@ const statis = require( "statis" );
 const stringe = require( "stringe" );
 const symbiote = require( "symbiote" );
 const truly = require( "truly" );
-const wichis = require( "wichis" );
 const zelf = require( "zelf" );
 
 const CACHE = Symbol( "cache" );
@@ -330,7 +328,7 @@ const catcher = function catcher( method ){
 
 		let self = Catcher[ INSTANCE ] = this;
 
-		this[ CALLBACK ] = wichis( Catcher[ CALLBACK ], [ ] );
+		this[ CALLBACK ] = Catcher[ CALLBACK ];
 
 		this[ CACHE ] = Catcher[ CACHE ];
 
@@ -561,9 +559,23 @@ const catcher = function catcher( method ){
 		return result;
 	};
 
-	Catcher.prototype.stop = function stop( ){
+	Catcher.prototype.stop = function stop( error, result, parameter ){
+		/*;
+			@meta-configuration:
+				{
+					"error": Error,
+					"result": "*",
+					"parameter": "..."
+				}
+			@end-meta-configuration
+		*/
+
 		if( mrkd( STOPPED, Catcher, true ) ){
 			return this;
+		}
+
+		if( arguments.length >= 1 ){
+			this.detour.apply( this, raze( arguments ) );
 		}
 
 		this.release( );
@@ -572,6 +584,23 @@ const catcher = function catcher( method ){
 		Catcher.flush( );
 
 		burne( STOPPED, Catcher );
+
+		return this;
+	};
+
+	Catcher.prototype.detour = function detour( error, result, parameter ){
+		/*;
+			@meta-configuration:
+				{
+					"error": Error,
+					"result": "*",
+					"parameter": "..."
+				}
+			@end-meta-configuration
+		*/
+
+		this[ CALLBACK ].reverse( ).pop( )
+			.apply( context, [ error, result ].concat( shft( arguments, 3 ) ) );
 
 		return this;
 	};
@@ -722,6 +751,30 @@ const catcher = function catcher( method ){
 		return this;
 	};
 
+	Catcher.prototype.error = function error( issue ){
+		/*;
+			@meta-configuration:
+				{
+					"issue:required": Error
+				}
+			@end-meta-configuration
+		*/
+
+		if( !( issue instanceof Error ) ){
+			throw new Error( "invalid issue" );
+		}
+
+		if( kein( DEFER, this ) ){
+			return this[ DEFER ]( issue );
+		}
+
+		if( this.hasEvent( "error" ) ){
+			this.emit( "error", issue );
+		}
+
+		return this;
+	};
+
 	Catcher.prototype.valueOf = function valueOf( ){
 		return this.result( );
 	};
@@ -810,19 +863,52 @@ const catcher = function catcher( method ){
 
 			return this;
 		} )
-		.implement( "stop", function stop( ){
+		.implement( "stop", function stop( error, result, parameter ){
+			/*;
+				@meta-configuration:
+					{
+						"error": Error,
+						"result": "*",
+						"parameter": "..."
+					}
+				@end-meta-configuration
+			*/
+
 			if( mrkd( STOPPED, Catcher, true ) ){
 				return this;
 			}
 
+			if( arguments.length >= 1 ){
+				this.detour.apply( this, raze( arguments ) );
+			}
+
 			if( kein( INSTANCE, this ) ){
 				this.release( );
+
+			}else{
+				flush.bind( this )( );
 			}
 
 			this.emit( "release" );
 			this.flush( );
 
 			burne( STOPPED, Catcher );
+
+			return this;
+		} )
+		.implement( "detour", function detour( error, result, parameter ){
+			/*;
+				@meta-configuration:
+					{
+						"error": Error,
+						"result": "*",
+						"parameter": "..."
+					}
+				@end-meta-configuration
+			*/
+
+			this[ CALLBACK ].reverse( ).pop( )
+				.apply( context, [ error, result ].concat( shft( arguments, 3 ) ) );
 
 			return this;
 		} )
@@ -1079,6 +1165,29 @@ const catcher = function catcher( method ){
 			}
 
 			this.once( `flow:${ name }`, handler );
+
+			return this;
+		} )
+		.implement( "error", function error( issue ){
+			/*;
+				@meta-configuration:
+					{
+						"issue:required": Error
+					}
+				@end-meta-configuration
+			*/
+
+			if( !( issue instanceof Error ) ){
+				throw new Error( "invalid issue" );
+			}
+
+			if( kein( DEFER, this ) ){
+				return this[ DEFER ]( issue );
+			}
+
+			if( this.hasEvent( "error" ) ){
+				this.emit( "error", issue );
+			}
 
 			return this;
 		} )
