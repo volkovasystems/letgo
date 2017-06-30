@@ -192,8 +192,6 @@ test3( function lastly( error, result ){
 
 		assert.equal( error instanceof Error, true, "should be true" );
 
-		console.log( "Test3 lastly", error );
-
 	}else{
 		console.log( "Dependency installed successfully" );
 	}
