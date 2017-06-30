@@ -1,8 +1,41 @@
+<!DOCTYPE html>
 <html>
 	<head>
-		<script
-			type="application/javascript"
-			src="./letgo.deploy.js">
-		</script>
+		<title>letgo unit test</title>
+
+		<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.3.2.css">
+
+		<script type="application/javascript" src="https://code.jquery.com/qunit/qunit-2.3.2.js"></script>
+
+		<script type="application/javascript" src="./letgo.deploy.js"></script>
 	</head>
+
+	<body>
+		<div id="qunit"></div>
+
+		<div id="qunit-fixture"></div>
+
+		<script type="application/javascript">
+			QUnit.test( "letgo unit test", function( assert ) {
+
+				let calls = [ ];
+				let catcher = letgo.bind( { "hello": 12345 }  )( function test( callback, value ){
+					calls.push( "test" );
+
+					return callback( null, value, "hello yeah" );
+				} );
+
+				catcher = catcher( function callback( error, result, value ){
+					calls.push( "callback" );
+
+					assert.deepEqual( calls, [ "test", "callback" ], "should be deeply equal" );
+
+					console.log( "called", calls );
+
+					return Array.from( arguments );
+				}, "hello world" );
+
+			} );
+		</script>
+	</body>
 </html>

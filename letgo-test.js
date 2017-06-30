@@ -1,5 +1,7 @@
 
+const arid = require( "arid" );
 const assert = require( "assert" );
+const filled = require( "filled" );
 const letgo = require( "./letgo.js" );
 
 let calls = [ ];
@@ -116,4 +118,82 @@ let test = letgo.bind( { "hello": "world" } )( function later( callback ){
 
 test( function hello( error, result, value ){
 	console.log( "hello", arguments );
+} );
+
+let test2 = letgo( function prepareMessage( callback ){
+
+	callback( null, { "text": "hello" } );
+
+} )
+
+test2.then( function addSubject( error, result ){
+
+	assert.deepEqual( result, { "text": "hello" }, "should be deeply equal" );
+
+	result.subject = "hello world";
+	return test2.pass( null, result );
+
+} );
+
+test2.then( function addReceiver( error, result ){
+
+	assert.deepEqual( result, { "text": "hello", "subject": "hello world" }, "should be deeply equal" );
+
+	result.receiver = "bogus@biyaheroes.com";
+	return test2.pass( null, result );
+
+} );
+
+test2( function lastly( error, result ){
+
+	assert.deepEqual( result, { "text": "hello", "subject": "hello world", "receiver": "bogus@biyaheroes.com" }, "should be deeply equal" );
+
+	console.log( "test2 lastly", result );
+
+} );
+
+
+let test3 = letgo( function checkOutMaster( callback ){
+
+	console.log( "step 1" );
+
+	callback( null, true );
+
+} )
+
+test3.then( function pullMaster( error, result ){
+
+	console.log( "step 2" );
+
+	assert.equal( result, true, "should be true" );
+
+	test3.pass( new Error( "Failed to pull master" ), null );
+
+} );
+
+test3.then( function installDependency( error, result ){
+
+	console.log( "step 3" );
+
+	assert.equal( filled( test3.list( ) ), true, "should be true" );
+
+	if( error ){
+		test3.stop( error, null );
+	}
+
+	assert.equal( arid( test3.list( ) ), true, "should be true" );
+
+} );
+
+
+test3( function lastly( error, result ){
+
+	if( error ){
+
+		assert.equal( error instanceof Error, true, "should be true" );
+
+	}else{
+		console.log( "Dependency installed successfully" );
+	}
+
 } );
