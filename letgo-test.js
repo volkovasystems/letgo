@@ -122,7 +122,7 @@ test( function hello( error, result, value ){
 
 let test2 = letgo( function prepareMessage( callback ){
 
-	callback( null, { "text": "hello" } );
+	return callback( null, { "text": "hello" } );
 
 } )
 
@@ -157,7 +157,7 @@ let test3 = letgo( function checkOutMaster( callback ){
 
 	console.log( "step 1" );
 
-	callback( null, true );
+	return callback( null, true );
 
 } )
 
@@ -167,7 +167,7 @@ test3.then( function pullMaster( error, result ){
 
 	assert.equal( result, true, "should be true" );
 
-	test3.pass( new Error( "Failed to pull master" ), null );
+	return test3.pass( new Error( "Failed to pull master" ), null );
 
 } );
 
@@ -178,10 +178,14 @@ test3.then( function installDependency( error, result ){
 	assert.equal( filled( test3.list( ) ), true, "should be true" );
 
 	if( error ){
+
 		test3.stop( error, null );
+
+		assert.equal( arid( test3.list( ) ), true, "should be true" );
+
 	}
 
-	assert.equal( arid( test3.list( ) ), true, "should be true" );
+	return test3.pass( null, true );
 
 } );
 
